@@ -27,7 +27,57 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        BarradeOpcoes = new javax.swing.JMenuBar();
+        OpcaoNovoCliente = new javax.swing.JMenu();
+        CriarItem = new javax.swing.JMenuItem();
+        EditarItem = new javax.swing.JMenuItem();
+        ListarItem = new javax.swing.JMenuItem();
+        ExcluirItem = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        OpcaoNovoCliente.setText("Cliente");
+        OpcaoNovoCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcaoNovoClienteActionPerformed(evt);
+            }
+        });
+
+        CriarItem.setText("Criar");
+        CriarItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CriarItemActionPerformed(evt);
+            }
+        });
+        OpcaoNovoCliente.add(CriarItem);
+
+        EditarItem.setText("Editar");
+        EditarItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditarItemActionPerformed(evt);
+            }
+        });
+        OpcaoNovoCliente.add(EditarItem);
+
+        ListarItem.setText("Listar");
+        ListarItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ListarItemActionPerformed(evt);
+            }
+        });
+        OpcaoNovoCliente.add(ListarItem);
+
+        ExcluirItem.setText("Excluir");
+        ExcluirItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExcluirItemActionPerformed(evt);
+            }
+        });
+        OpcaoNovoCliente.add(ExcluirItem);
+
+        BarradeOpcoes.add(OpcaoNovoCliente);
+
+        setJMenuBar(BarradeOpcoes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -37,11 +87,32 @@ public class Menu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 279, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void CriarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CriarItemActionPerformed
+
+        new CadastroCliente().setVisible(true);
+    }//GEN-LAST:event_CriarItemActionPerformed
+
+    private void EditarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarItemActionPerformed
+        new EditarCliente().setVisible(true);
+    }//GEN-LAST:event_EditarItemActionPerformed
+
+    private void ListarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListarItemActionPerformed
+        new ListarClientes().setVisible(true);
+    }//GEN-LAST:event_ListarItemActionPerformed
+
+    private void ExcluirItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExcluirItemActionPerformed
+        new ExcluirCliente().setVisible(true);
+    }//GEN-LAST:event_ExcluirItemActionPerformed
+
+    private void OpcaoNovoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcaoNovoClienteActionPerformed
+        
+    }//GEN-LAST:event_OpcaoNovoClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +150,11 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar BarradeOpcoes;
+    private javax.swing.JMenuItem CriarItem;
+    private javax.swing.JMenuItem EditarItem;
+    private javax.swing.JMenuItem ExcluirItem;
+    private javax.swing.JMenuItem ListarItem;
+    private javax.swing.JMenu OpcaoNovoCliente;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,7 +1,7 @@
 package dao;
 
 import connection.Conexao;
-import connection.Connection;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,9 +39,9 @@ public class ClienteDAO {
             stmt.setInt(1, codCliente);
             ResultSet rs = stmt.executeQuery();
             rs.first();
-            Cliente cl = new Cliente(rs.getInt('codCliente'), rs.getString('nome'), rs.getString('endereco'), rs.getString('email'), rs.getString('telefone'));
+            Cliente cl = new Cliente(rs.getInt("codCliente"), rs.getString("nome"), rs.getString("endereco"), rs.getString("email"), rs.getString("telefone"));
             return cl;
-        } catch (Exception e) {
+        } catch (SQLException ex) {
             System.out.println("Erro ao buscar cliente: " + ex.getMessage());
             return null;
         }
