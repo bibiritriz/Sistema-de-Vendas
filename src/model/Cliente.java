@@ -62,6 +62,10 @@ public class Cliente {
     public String getEmail() {
         return email;
     }
+    
+    public void setCod(int codCliente){
+        this.codCliente = codCliente;
+    }
 
     public void setEmail(String email) {
         this.email = email;
