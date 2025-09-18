@@ -5,18 +5,26 @@
  */
 package views;
 
+import dao.ClienteDAO;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+
 /**
  *
  * @author Beatriz Camargo
  */
 public class MenuClinetes extends javax.swing.JFrame {
+    private DefaultTableModel tblClienteModel;
 
-    /**
-     * Creates new form CadastroCliente
-     */
     public MenuClinetes() {
         initComponents();
+        tblClienteModel = (DefaultTableModel) ClienteTable.getModel();
+        carregarClientes();
+        CodigoGroupInput.setVisible(false);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,21 +35,297 @@ public class MenuClinetes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        criarBotao = new javax.swing.JButton();
+        BotaoLimpar = new javax.swing.JButton();
+        ExcluirButton = new javax.swing.JButton();
+        BotaoEditar = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        TelefoneInput = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        NomeField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        EnderecoLabel = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        EmailLabel = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        CodigoGroupInput = new javax.swing.JPanel();
+        CodInput = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ClienteTable = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        criarBotao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/add.png"))); // NOI18N
+        criarBotao.setText("Salvar");
+        criarBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                criarBotaoActionPerformed(evt);
+            }
+        });
+
+        BotaoLimpar.setText("Limpar");
+        BotaoLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoLimparActionPerformed(evt);
+            }
+        });
+
+        ExcluirButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/delete.png"))); // NOI18N
+        ExcluirButton.setText("Excluir");
+        ExcluirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExcluirButtonActionPerformed(evt);
+            }
+        });
+
+        BotaoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/pencil.png"))); // NOI18N
+        BotaoEditar.setText("Editar");
+        BotaoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoEditarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Nome: ");
+
+        jLabel3.setText("Endereco: ");
+
+        jLabel4.setText("Email:");
+
+        jLabel5.setText("Telefone");
+
+        CodInput.setEnabled(false);
+
+        jLabel6.setText("Código: ");
+
+        javax.swing.GroupLayout CodigoGroupInputLayout = new javax.swing.GroupLayout(CodigoGroupInput);
+        CodigoGroupInput.setLayout(CodigoGroupInputLayout);
+        CodigoGroupInputLayout.setHorizontalGroup(
+            CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CodigoGroupInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(CodInput, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        CodigoGroupInputLayout.setVerticalGroup(
+            CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CodigoGroupInputLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CodInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(EnderecoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(TelefoneInput, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(EmailLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 20, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(EnderecoLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/userIcon.png"))); // NOI18N
+        jLabel2.setText("Gerenciamento de Clientes");
+
+        ClienteTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cod", "Nome", "Endereco", "Email", "Telefone"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        ClienteTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane1.setViewportView(ClienteTable);
+        if (ClienteTable.getColumnModel().getColumnCount() > 0) {
+            ClienteTable.getColumnModel().getColumn(0).setResizable(false);
+            ClienteTable.getColumnModel().getColumn(2).setResizable(false);
+            ClienteTable.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 463, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(335, 335, 335)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(criarBotao)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ExcluirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(BotaoEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(BotaoLimpar)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 343, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(criarBotao)
+                            .addComponent(ExcluirButton)
+                            .addComponent(BotaoEditar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BotaoLimpar))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void criarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criarBotaoActionPerformed
+        String nome = NomeField.getText().trim();
+        String email = EmailLabel.getText().trim();
+        String telefone = TelefoneInput.getText().trim();
+        String endereco = EnderecoLabel.getText().trim();
+
+        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Os campos Nome, Email e Telefone são obrigatórios.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(CodigoGroupInput.isVisible()){
+            Cliente cl = new Cliente();
+            cl.setCod(Integer.parseInt(CodInput.getText()));
+            cl.setEmail(email);
+            cl.setEndereco(endereco);
+            cl.setNome(nome);
+            cl.setTelefone(telefone);
+            ClienteDAO clDAO = new ClienteDAO();
+            clDAO.editar(cl);
+            carregarClientes();
+        }else{
+            Cliente cl = new Cliente(nome,endereco,email,telefone);
+            ClienteDAO clDAO = new ClienteDAO();
+            clDAO.inserir(cl);
+            carregarClientes();        
+        }
+        limparFormulario();
+    }//GEN-LAST:event_criarBotaoActionPerformed
+
+    private void ExcluirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExcluirButtonActionPerformed
+        if(ClienteTable.getSelectedRowCount() == 1){
+            int reposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Exclusão", JOptionPane.YES_NO_OPTION);
+            if(reposta == JOptionPane.YES_OPTION){
+                ClienteDAO clDAO = new ClienteDAO();
+                int linha = ClienteTable.getSelectedRow();
+                int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
+                clDAO.excluir(cod);
+                tblClienteModel.removeRow(ClienteTable.getSelectedRow());
+            }
+        }else if(ClienteTable.getRowCount()==0){
+            JOptionPane.showMessageDialog(this, "Tabela vazia.");
+        }else{
+            JOptionPane.showMessageDialog(this, "Por favor, seleciona apenas uma linha para a operação.");
+        }
+        limparFormulario();
+    }//GEN-LAST:event_ExcluirButtonActionPerformed
+
+    private void BotaoLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoLimparActionPerformed
+        limparFormulario();
+    }//GEN-LAST:event_BotaoLimparActionPerformed
+
+    private void BotaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoEditarActionPerformed
+        if (ClienteTable.getSelectedRowCount() == 1) {
+            int linha = ClienteTable.getSelectedRow();
+            int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
+            CodigoGroupInput.setVisible(true);
+            CodInput.setText(String.valueOf(cod));
+
+            NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
+            EnderecoLabel.setText(ClienteTable.getValueAt(linha, 2).toString());
+            EmailLabel.setText(ClienteTable.getValueAt(linha, 3).toString());
+            TelefoneInput.setText(ClienteTable.getValueAt(linha, 4).toString());
+            
+        } else if (ClienteTable.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Tabela vazia.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecione apenas uma linha para a operação.");
+        }
+    }//GEN-LAST:event_BotaoEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -71,6 +355,7 @@ public class MenuClinetes extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -79,8 +364,68 @@ public class MenuClinetes extends javax.swing.JFrame {
             }
         });
     }
+    private void carregarClientes() {
+        List<Cliente> clientes = new ClienteDAO().getClientes();
+        tblClienteModel.setRowCount(0);
+        for (Cliente c : clientes) {
+            tblClienteModel.addRow(new Object[]{
+                c.getCod(),
+                c.getNome(),
+                c.getEndereco(),
+                c.getEmail(),
+                c.getTelefone()
+            });
+        }
+    }
+    
+    private void selecionarCliente() {
+        if (ClienteTable.getSelectedRowCount() == 1) {
+           int linha = ClienteTable.getSelectedRow();
+           int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
+           CodigoGroupInput.setVisible(true);
+           CodInput.setText(String.valueOf(cod));
+
+           NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
+           EnderecoLabel.setText(ClienteTable.getValueAt(linha, 2).toString());
+           EmailLabel.setText(ClienteTable.getValueAt(linha, 3).toString());
+           TelefoneInput.setText(ClienteTable.getValueAt(linha, 4).toString());
+
+       } else if (ClienteTable.getRowCount() == 0) {
+           JOptionPane.showMessageDialog(this, "Tabela vazia.");
+       } else {
+           JOptionPane.showMessageDialog(this, "Por favor, selecione apenas uma linha para a operação.");
+       }
+    }
+    
+    private void limparFormulario(){
+        CodigoGroupInput.setVisible(false);
+        EmailLabel.setText("");
+        NomeField.setText("");
+        TelefoneInput.setText("");
+        EnderecoLabel.setText("");
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotaoEditar;
+    private javax.swing.JButton BotaoLimpar;
+    private javax.swing.JTable ClienteTable;
+    private javax.swing.JTextField CodInput;
+    private javax.swing.JPanel CodigoGroupInput;
+    private javax.swing.JTextField EmailLabel;
+    private javax.swing.JTextField EnderecoLabel;
+    private javax.swing.JButton ExcluirButton;
+    private javax.swing.JTextField NomeField;
+    private javax.swing.JTextField TelefoneInput;
+    private javax.swing.JButton criarBotao;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
 }
