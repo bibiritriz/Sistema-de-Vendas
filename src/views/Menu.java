@@ -71,10 +71,22 @@ public class Menu extends javax.swing.JFrame {
         BarradeOpcoes.add(ProdutoMenu);
 >>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
         CienteMenu.setText("Cliente");
         BarradeOpcoes.add(CienteMenu);
 
         jMenu1.setText("jMenu1");
+=======
+        ExcluirItem.setText("Excluir");
+        ExcluirItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExcluirItemActionPerformed(evt);
+            }
+        });
+        OpcaoNovoCliente.add(ExcluirItem);
+
+        BarradeOpcoes.add(OpcaoNovoCliente);
+>>>>>>> Stashed changes
         BarradeOpcoes.add(jMenu1);
 
         setJMenuBar(BarradeOpcoes);
