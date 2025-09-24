@@ -532,10 +532,12 @@ public class MenuClientes extends javax.swing.JFrame {
         List<Cliente> clientes = new ClienteDAO().getClientes();
         tblClienteModel.setRowCount(0);
         for (Cliente c : clientes) {
+            EnderecoDAO endDAO = new EnderecoDAO();
+            Endereco clEnd = endDAO.buscarEnderecoPorCodCliente(c.getCod());
             tblClienteModel.addRow(new Object[]{
                 c.getCod(),
                 c.getNome(),
-                c.getCodEndereco(),
+                clEnd.getCep(),
                 c.getEmail(),
                 c.getTelefone()
             });
