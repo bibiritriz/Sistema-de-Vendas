@@ -40,8 +40,8 @@ public class viaCEPService {
         endereco.setLogradouro(json.getString("logradouro", ""));
         endereco.setComplemento(json.getString("complemento", ""));
         endereco.setBairro(json.getString("bairro", ""));
-        endereco.setLocalidade(json.getString("localidade", ""));
         endereco.setUf(json.getString("uf", ""));
+        endereco.setEstado(json.getString("estado", ""));
 
         return endereco;
     };
