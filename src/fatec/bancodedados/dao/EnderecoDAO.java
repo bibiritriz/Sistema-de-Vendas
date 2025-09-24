@@ -102,4 +102,26 @@ public class EnderecoDAO {
         }
     }
     
+    public void editar(Endereco end) {
+        try {
+            String sql = "UPDATE enderecos SET bairro=?, cep=?, complemento=?, cidade=?, logradouro=?, numCasa=?, uf=? WHERE codEndereco=?";
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1, end.getBairro());
+            stmt.setString(2, end.getCep());
+            stmt.setString(3, end.getComplemento());
+            stmt.setString(4, end.getCidade());
+            stmt.setString(5, end.getLogradouro());
+            stmt.setString(6, end.getNumCasa());
+            stmt.setString(7, end.getUf());
+            stmt.setInt(8, end.getCodEndereco());
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                System.out.println("Nenhum endereço atualizado. Verifique se o codEndereco existe.");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao atualizar Endereço: " + ex.getMessage());
+        }
+    }
+    
 }

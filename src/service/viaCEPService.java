@@ -7,22 +7,13 @@ package service;
 
 //TODO: Erro devido a falta da classe Endereco
 import javax.json.Json;
-<<<<<<< Updated upstream
-=======
-import java.io.BufferedReader;
->>>>>>> Stashed changes
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-<<<<<<< Updated upstream
 import fatec.bancodedados.model.Endereco;
-import java.net.HttpURLConnection;;
-=======
-import model.Endereco;
-import java.net.HttpURLConnection;
->>>>>>> Stashed changes
+import java.net.HttpURLConnection;;//
 
 /**
  *

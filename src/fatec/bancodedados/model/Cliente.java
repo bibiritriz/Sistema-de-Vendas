@@ -55,7 +55,7 @@ public class Cliente {
         return codEndereco;
     }
 
-    public void serCodEndereco(int codEndereco) {
+    public void setCodEndereco(int codEndereco) {
         this.codEndereco = codEndereco;
     }
 

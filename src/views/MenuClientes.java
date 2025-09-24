@@ -165,7 +165,6 @@ public class MenuClientes extends javax.swing.JFrame {
 
         jLabel11.setText("Complemento");
 
-        ComplementoInput.setEnabled(false);
         ComplementoInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComplementoInputActionPerformed(evt);
@@ -382,7 +381,11 @@ public class MenuClientes extends javax.swing.JFrame {
             cl.setNome(nome);
             cl.setTelefone(telefone);
             
-            Endereco end = new Endereco();
+            
+            EnderecoDAO endDAO = new EnderecoDAO();
+            
+            Endereco end = endDAO.buscarEnderecoPorCodCliente(cl.getCod());
+            
             end.setLogradouro(LogradouroInput.getText());
             end.setNumCasa(NumeroInput.getText());
             end.setBairro(BairroInput.getText());
@@ -390,6 +393,11 @@ public class MenuClientes extends javax.swing.JFrame {
             end.setCidade(CidadeInput.getText());
             end.setCep(CEPLabel.getText());
             end.setComplemento(ComplementoInput.getText());
+
+            System.out.println("Código: " + end.getCodEndereco());
+            endDAO.editar(end);
+            
+            cl.setCodEndereco(end.getCodEndereco());
             
             ClienteDAO clDAO = new ClienteDAO();
             clDAO.editar(cl);
@@ -574,6 +582,7 @@ public class MenuClientes extends javax.swing.JFrame {
         BairroInput.setText("");
         UfInput.setText("");
         CidadeInput.setText("");
+        ComplementoInput.setText("");
     }
     
     private void preencherEndereco(Endereco end){
@@ -582,6 +591,7 @@ public class MenuClientes extends javax.swing.JFrame {
         UfInput.setText(end.getUf());
         CidadeInput.setText(end.getCidade());
         ComplementoInput.setText(end.getComplemento());
+        NumeroInput.setText(end.getNumCasa());
     }
     
 
