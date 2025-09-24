@@ -5,6 +5,9 @@
  */
 package views;
 
+import java.awt.Component;
+import javax.swing.BoxLayout;
+
 /**
  *
  * @author Beatriz Camargo
@@ -16,6 +19,7 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
+        modificarMenu();
     }
 
     /**
@@ -33,8 +37,11 @@ public class Menu extends javax.swing.JFrame {
         EditarItem = new javax.swing.JMenuItem();
         ListarItem = new javax.swing.JMenuItem();
         ExcluirItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        BarradeOpcoes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         OpcaoNovoCliente.setText("Cliente");
         OpcaoNovoCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -77,6 +84,9 @@ public class Menu extends javax.swing.JFrame {
 
         BarradeOpcoes.add(OpcaoNovoCliente);
 
+        jMenu1.setText("jMenu1");
+        BarradeOpcoes.add(jMenu1);
+
         setJMenuBar(BarradeOpcoes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -87,7 +97,7 @@ public class Menu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+            .addGap(0, 307, Short.MAX_VALUE)
         );
 
         pack();
@@ -156,5 +166,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem ExcluirItem;
     private javax.swing.JMenuItem ListarItem;
     private javax.swing.JMenu OpcaoNovoCliente;
+    private javax.swing.JMenu jMenu1;
     // End of variables declaration//GEN-END:variables
+    private void modificarMenu(){
+        BarradeOpcoes.setLayout(new BoxLayout(BarradeOpcoes, BoxLayout.Y_AXIS));
+        jMenu1.setAlignmentX(Component.LEFT_ALIGNMENT);
+   }
+
 }

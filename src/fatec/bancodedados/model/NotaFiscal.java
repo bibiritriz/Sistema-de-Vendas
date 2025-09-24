@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package fatec.bancodedados.model;
 
 /**
  *
  * @author Beatriz Camargo
  */
-public class NotaFiscalDAO {
+public class NotaFiscal {
     
 }

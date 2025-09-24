@@ -1,4 +1,4 @@
-package model;
+package fatec.bancodedados.model;
 
 /**
  *

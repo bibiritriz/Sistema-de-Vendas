@@ -1,4 +1,4 @@
-package dao;
+package fatec.bancodedados.dao;
 
 import connection.Conexao;
 import java.sql.Connection;
@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Produto;
+import fatec.bancodedados.model.Produto;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -22,18 +25,26 @@ public class ProdutoDAO {
         conn = conexao.getConexao();
     }
     
-    public void inserir(Produto produto){
-        String sql = "INSERT INTO produtos (nome, descricao, precoVenda, qtdEstoque) values (?, ?, ?, ?, ?)";
+    public Produto inserir(Produto produto){
+        String sql = "INSERT INTO produtos (nome, descricao, precoVenda, qtdEstoque) values (?, ?, ?, ?)";
         
         try{
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, produto.getNome());
             stmt.setString(2, produto.getDescricao());
             stmt.setDouble(3, produto.getPrecoVenda());
             stmt.setInt(4, produto.getQtdeEstoque());
+            stmt.execute();
+            
+            ResultSet rs = stmt.getGeneratedKeys();
+            rs.next();
+            produto.setCodProd(rs.getInt(1));
         } catch(SQLException e){
             System.out.println("Erro ao inserir produto: " + e.getMessage());
+            return null;
         }
+        
+        return produto;
     }
     
     public Produto getProduto(int codProduto){
@@ -56,14 +67,19 @@ public class ProdutoDAO {
     }
     
     public void editar(Produto produto){
-        String sql = "UPDATE produtos set nome = ?, descricao = ?, precoVenda = ?, qtdEstoque = ?";
+        String sql = "UPDATE produtos set nome = ?, descricao = ?, precoVenda = ?, qtdEstoque = ? where codProduto = ?";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, produto.getNome());
-            stmt.setString(2, produto.getDescricao());
+            if(produto.getDescricao() == null){
+                stmt.setNull(2, java.sql.Types.VARCHAR); 
+            } else {
+                stmt.setString(2, produto.getDescricao());
+            }
             stmt.setDouble(3, produto.getPrecoVenda());
             stmt.setInt(4, produto.getQtdeEstoque());
+            stmt.setInt(5, produto.getCodProd());
             stmt.execute();
         } catch(SQLException e){
             System.out.println("Erro ao atualizar produto: " + e.getMessage());
@@ -77,9 +93,9 @@ public class ProdutoDAO {
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            
             while(rs.next()){
                 Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nome"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
+                p.setDescricao(rs.getString("descricao"));
                 lista.add(p);
             }
         } catch(SQLException e){
@@ -90,7 +106,7 @@ public class ProdutoDAO {
     }
     
     public void excluir(int codProduto){
-        String sql = "DELETE FROM produtos WHERE id = ?";
+        String sql = "DELETE FROM produtos WHERE codProduto = ?";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
