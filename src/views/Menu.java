@@ -5,20 +5,13 @@
  */
 package views;
 
-<<<<<<< Updated upstream
-import java.awt.Component;
-import javax.swing.BoxLayout;
-=======
-import dao.ClienteDAO;
-import java.awt.Component;
-import java.util.List;
-import javax.swing.BoxLayout;
-import model.Cliente;
->>>>>>> Stashed changes
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 /**
  *
- * @author Beatriz Camargo
+ * @author Isaqu
  */
 public class Menu extends javax.swing.JFrame {
 
@@ -26,8 +19,11 @@ public class Menu extends javax.swing.JFrame {
      * Creates new form Menu
      */
     public Menu() {
+        System.out.println(getClass().getResource("/views/fireren.png"));
         initComponents();
-        modificarMenu();
+        ajustar();
+        ajustarImagem();
+
     }
 
     /**
@@ -40,70 +36,93 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuItem1 = new javax.swing.JMenuItem();
-        BarradeOpcoes = new javax.swing.JMenuBar();
-<<<<<<< Updated upstream
-        OpcaoNovoCliente = new javax.swing.JMenu();
-        CriarItem = new javax.swing.JMenuItem();
-        EditarItem = new javax.swing.JMenuItem();
-        ListarItem = new javax.swing.JMenuItem();
-        ExcluirItem = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        BarradeOpcoes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        OpcaoNovoCliente.setText("Cliente");
-        OpcaoNovoCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpcaoNovoClienteActionPerformed(evt);
-            }
-        });
-=======
-        ProdutoMenu = new javax.swing.JMenu();
-        CienteMenu = new javax.swing.JMenu();
+        ClienteButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        frieren = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("TelaHome");
+        setMaximumSize(new java.awt.Dimension(500, 300));
+        setMinimumSize(new java.awt.Dimension(500, 300));
 
-        ProdutoMenu.setText("Produto");
-        BarradeOpcoes.add(ProdutoMenu);
->>>>>>> Stashed changes
-
-<<<<<<< Updated upstream
-        CienteMenu.setText("Cliente");
-        BarradeOpcoes.add(CienteMenu);
-
-        jMenu1.setText("jMenu1");
-=======
-        ExcluirItem.setText("Excluir");
-        ExcluirItem.addActionListener(new java.awt.event.ActionListener() {
+        ClienteButton.setText("Clientes");
+        ClienteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ExcluirItemActionPerformed(evt);
+                ClienteButtonActionPerformed(evt);
             }
         });
-        OpcaoNovoCliente.add(ExcluirItem);
 
-        BarradeOpcoes.add(OpcaoNovoCliente);
->>>>>>> Stashed changes
-        BarradeOpcoes.add(jMenu1);
+        jButton2.setText("Produtos");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        setJMenuBar(BarradeOpcoes);
+        jButton3.setText("Notas fiscais");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setText("Sistema de Vendas");
+        jLabel1.setAlignmentX(120.0F);
+        jLabel1.setAlignmentY(0.0F);
+
+        frieren.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/fireren.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 403, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(173, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(frieren, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addComponent(jLabel1)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ClienteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(158, 158, 158))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 307, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(49, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(ClienteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(frieren, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ClienteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClienteButtonActionPerformed
+        new MenuClientes().setVisible(true);
+    }//GEN-LAST:event_ClienteButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new CadastroProduto().setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new LancamentoNotaFiscal().setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -116,7 +135,7 @@ public class Menu extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -142,30 +161,37 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar BarradeOpcoes;
-<<<<<<< Updated upstream
-    private javax.swing.JMenuItem CriarItem;
-    private javax.swing.JMenuItem EditarItem;
-    private javax.swing.JMenuItem ExcluirItem;
-    private javax.swing.JMenuItem ListarItem;
-    private javax.swing.JMenu OpcaoNovoCliente;
-    private javax.swing.JMenu jMenu1;
-    // End of variables declaration//GEN-END:variables
-    private void modificarMenu(){
-        BarradeOpcoes.setLayout(new BoxLayout(BarradeOpcoes, BoxLayout.Y_AXIS));
-        jMenu1.setAlignmentX(Component.LEFT_ALIGNMENT);
-   }
-
-=======
-    private javax.swing.JMenu CienteMenu;
-    private javax.swing.JMenu ProdutoMenu;
+    private javax.swing.JButton ClienteButton;
+    private javax.swing.JLabel frieren;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
-    private void modificarMenu(){
-        BarradeOpcoes.setLayout(new BoxLayout(BarradeOpcoes, BoxLayout.Y_AXIS));
-        CienteMenu.setAlignmentX(Component.LEFT_ALIGNMENT);
-        ProdutoMenu.setAlignmentX(Component.LEFT_ALIGNMENT);
-   }
->>>>>>> Stashed changes
+    
+    private void ajustar(){
+        jButton2.setVerticalAlignment(SwingConstants.CENTER);
+        jButton3.setVerticalAlignment(SwingConstants.CENTER);
+        ClienteButton.setVerticalAlignment(SwingConstants.CENTER);
+        jLabel1.setVerticalAlignment(SwingConstants.CENTER);
+    }
+    private void ajustarImagem() {
+        // Carrega a imagem original
+        ImageIcon icon = new ImageIcon(getClass().getResource("/views/fireren.png"));
+
+        // Redimensiona para caber no JLabel
+        Image img = icon.getImage();
+        Image imgRedimensionada = img.getScaledInstance(
+            frieren.getWidth(), 
+            frieren.getHeight(), 
+            Image.SCALE_SMOOTH
+        );
+
+        // Define no JLabel
+        frieren.setIcon(new ImageIcon(imgRedimensionada));
+        frieren.setHorizontalAlignment(SwingConstants.CENTER);
+        frieren.setVerticalAlignment(SwingConstants.CENTER);
+    }
+
 }
 
