@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import fatec.bancodedados.model.Produto;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
