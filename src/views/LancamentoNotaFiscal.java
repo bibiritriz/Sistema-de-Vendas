@@ -258,12 +258,29 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
 
     private void SelecionarProdutoBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelecionarProdutoBotaoActionPerformed
         int[] linhasSelecionadas = TBL_Produtos.getSelectedRows();
-        System.out.println("Clicou: " + linhasSelecionadas[0]);
-        List<String> lista = new ArrayList<>();
 
         for (int i : linhasSelecionadas) {
-            String nome = tblProdutoModel.getValueAt(i, 0).toString();
-            listaProdutosModel.add(i, nome);
+            int codProduto = (int) tblProdutoModel.getValueAt(i, 0);
+            String nomeProduto = tblProdutoModel.getValueAt(i, 1).toString();
+
+            // pede a quantidade ao usuário
+            String input = JOptionPane.showInputDialog(this, 
+                    "Informe a quantidade para o produto: " + nomeProduto, "Quantidade", JOptionPane.PLAIN_MESSAGE);
+
+            if (input != null && !input.trim().isEmpty()) {
+                try {
+                    int qtd = Integer.parseInt(input);
+
+                    if (qtd > 0) {
+                        // adiciona no JList mostrando produto + qtd
+                        listaProdutosModel.addElement(codProduto + ";" + qtd);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Quantidade deve ser maior que 0.");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Digite um número válido.");
+                }
+            }
         }
     }//GEN-LAST:event_SelecionarProdutoBotaoActionPerformed
 
@@ -273,17 +290,20 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
 
     private void NovaNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovaNotaBotaoActionPerformed
         NotaFiscal nf = new NotaFiscal();
-        
         nf.setCodCliente(Integer.parseInt(CodClienteInput.getText()));
-        
-        for(int i = 0; i < listaProdutosModel.getSize(); i++){
+
+        for(int i = 0; i < listaProdutosModel.size(); i++){
+            String[] dados = listaProdutosModel.get(i).split(";");
+            int codProduto = Integer.parseInt(dados[0]);
+            int qtd = Integer.parseInt(dados[1]);
+
             ProdutoNota pn = new ProdutoNota();
-            Produto p = new ProdutoDAO().getProduto(Integer.parseInt(listaProdutosModel.get(i)));
+            Produto p = new ProdutoDAO().getProduto(codProduto);
             pn.setProduto(p);
-            pn.setQtdVendida(1);
+            pn.setQtdVendida(qtd);
             nf.addItem(pn);
         }
-        
+
         new NotaFiscalDAO().inserir(nf);
         limpar();
     }//GEN-LAST:event_NovaNotaBotaoActionPerformed
