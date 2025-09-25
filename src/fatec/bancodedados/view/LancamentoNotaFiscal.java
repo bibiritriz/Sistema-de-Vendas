@@ -27,15 +27,19 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     private DefaultTableModel tblClienteModel;
     private DefaultTableModel tblProdutoModel;
     private DefaultListModel<String> listaProdutosModel;
-    
+    private DefaultTableModel tblNotasAnterioresModel;
+
     public LancamentoNotaFiscal() {
         initComponents();
         tblClienteModel = (DefaultTableModel) TBL_Clientes.getModel();
         tblProdutoModel = (DefaultTableModel) TBL_Produtos.getModel();
         listaProdutosModel = new DefaultListModel<>();
         ListaProdutos.setModel(listaProdutosModel);
+        tblNotasAnterioresModel = (DefaultTableModel) TBL_NotasAnteriores.getModel();
+        
         carregarProdutos();
         carregarClientes();
+        carregarNotasFiscais();
     }
 
     /**
@@ -60,8 +64,13 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         SelecionarProdutoBotao = new javax.swing.JButton();
         NovaNotaBotao = new javax.swing.JButton();
-        NotasAnterioresBotao = new javax.swing.JButton();
         LimparButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        TBL_NotasAnteriores = new javax.swing.JTable();
+        VerdetalhesBotao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Notas Fiscais");
@@ -162,17 +171,59 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
             }
         });
 
-        NotasAnterioresBotao.setText("Notas Anteriores");
-        NotasAnterioresBotao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NotasAnterioresBotaoActionPerformed(evt);
-            }
-        });
-
         LimparButton.setText("Limpar");
         LimparButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LimparButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Produtos Disponíveis");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("Notas Anteriores");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Clientes");
+
+        TBL_NotasAnteriores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "IDNota", "IDCliente", "QtTotal", "Subtotal", "Data venda"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Float.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TBL_NotasAnteriores.getTableHeader().setReorderingAllowed(false);
+        jScrollPane4.setViewportView(TBL_NotasAnteriores);
+        if (TBL_NotasAnteriores.getColumnModel().getColumnCount() > 0) {
+            TBL_NotasAnteriores.getColumnModel().getColumn(0).setResizable(false);
+            TBL_NotasAnteriores.getColumnModel().getColumn(1).setResizable(false);
+            TBL_NotasAnteriores.getColumnModel().getColumn(2).setResizable(false);
+            TBL_NotasAnteriores.getColumnModel().getColumn(3).setResizable(false);
+            TBL_NotasAnteriores.getColumnModel().getColumn(4).setResizable(false);
+        }
+
+        VerdetalhesBotao.setText("Ver detalhes");
+        VerdetalhesBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VerdetalhesBotaoActionPerformed(evt);
             }
         });
 
@@ -181,64 +232,85 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(NomeUsuarioLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(CodClienteInput)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(SelecionarClienteBotao)
-                                    .addComponent(SelecionarProdutoBotao)))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(NovaNotaBotao)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(NotasAnterioresBotao)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(LimparButton)))
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(278, 427, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(NomeUsuarioLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(SelecionarClienteBotao))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(SelecionarProdutoBotao)))
+                                .addGap(0, 306, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(NovaNotaBotao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LimparButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(VerdetalhesBotao)))))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(182, 182, 182))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(NomeUsuarioLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SelecionarClienteBotao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SelecionarProdutoBotao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(NomeUsuarioLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SelecionarClienteBotao))
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SelecionarProdutoBotao))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(NovaNotaBotao)
-                            .addComponent(NotasAnterioresBotao)
-                            .addComponent(LimparButton)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(NovaNotaBotao)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(LimparButton)
+                        .addComponent(VerdetalhesBotao))))
         );
 
         pack();
@@ -284,10 +356,6 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SelecionarProdutoBotaoActionPerformed
 
-    private void NotasAnterioresBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasAnterioresBotaoActionPerformed
-        new NotasAnteriores().setVisible(true);
-    }//GEN-LAST:event_NotasAnterioresBotaoActionPerformed
-
     private void NovaNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovaNotaBotaoActionPerformed
         NotaFiscal nf = new NotaFiscal();
         nf.setCodCliente(Integer.parseInt(CodClienteInput.getText()));
@@ -306,11 +374,25 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
 
         new NotaFiscalDAO().inserir(nf);
         limpar();
+        carregarNotasFiscais();
     }//GEN-LAST:event_NovaNotaBotaoActionPerformed
 
     private void LimparButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparButtonActionPerformed
         limpar();
     }//GEN-LAST:event_LimparButtonActionPerformed
+
+    private void VerdetalhesBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VerdetalhesBotaoActionPerformed
+        int linhas = TBL_NotasAnteriores.getSelectedRowCount();
+        if(linhas <= 0 || linhas > 1){
+            JOptionPane.showMessageDialog(this, "Por favor, selecione apenas uma linha para a operação.");
+            return;
+        }
+        int linha = TBL_NotasAnteriores.getSelectedRow();
+        int codNota = Integer.parseInt(TBL_NotasAnteriores.getValueAt(linha, 0).toString());
+        
+        NotaFiscal nf = new NotaFiscalDAO().getNotaFiscal(codNota);
+        new DetalhesNotaFiscal(nf).setVisible(true);
+    }//GEN-LAST:event_VerdetalhesBotaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,17 +434,22 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     private javax.swing.JButton LimparButton;
     private javax.swing.JList<String> ListaProdutos;
     private javax.swing.JLabel NomeUsuarioLabel;
-    private javax.swing.JButton NotasAnterioresBotao;
     private javax.swing.JButton NovaNotaBotao;
     private javax.swing.JButton SelecionarClienteBotao;
     private javax.swing.JButton SelecionarProdutoBotao;
     private javax.swing.JTable TBL_Clientes;
+    private javax.swing.JTable TBL_NotasAnteriores;
     private javax.swing.JTable TBL_Produtos;
+    private javax.swing.JButton VerdetalhesBotao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     // End of variables declaration//GEN-END:variables
     public void carregarProdutos(){
         List<Produto> produtos = new ProdutoDAO().getProdutos();
@@ -387,6 +474,21 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
                 cl.getNome(),
                 cl.getEmail(),
                 cl.getTelefone()
+            });
+        }
+    }
+    
+    public void carregarNotasFiscais(){
+        List<NotaFiscal> notasFiscais = new NotaFiscalDAO().getNotaFiscais();
+        tblNotasAnterioresModel.setRowCount(0);
+        for(NotaFiscal nf : notasFiscais){
+            //TODO: Implementar condição de: 'nf.getStatus() != 'Cancelado'', para filtrar as notas fiscais
+            tblNotasAnterioresModel.addRow(new Object[]{
+                nf.getCodNota(),
+                nf.getCodCliente(),
+                nf.getQtdTotal(),
+                nf.getSubTotal(),
+                nf.getDataVenda(),
             });
         }
     }
