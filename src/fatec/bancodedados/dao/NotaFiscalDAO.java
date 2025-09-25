@@ -145,4 +145,16 @@ public class NotaFiscalDAO {
         
         return notasFiscais;
     }
+    
+    public void excluirProdutodeNota(int codNotaFiscal, int codProduto){
+        try{
+            String sql = "DELETE FROM produtosnotas WHERE codNota = ? and codProduto = ?";
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setInt(1, codNotaFiscal);
+            stmt.setInt(2, codProduto);
+            stmt.execute();
+        }catch(SQLException ex){
+            System.out.println("Erro ao retirar produto de nota fiscal: " + ex.getMessage());
+        }
+    }
 }
