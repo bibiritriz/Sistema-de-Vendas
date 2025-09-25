@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package service;
+package fatec.bancodedados.service;
 
 //TODO: Erro devido a falta da classe Endereco
 import javax.json.Json;

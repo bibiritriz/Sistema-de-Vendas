@@ -1,6 +1,6 @@
 package fatec.bancodedados.dao;
 
-import connection.Conexao;
+import fatec.bancodedados.util.Conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

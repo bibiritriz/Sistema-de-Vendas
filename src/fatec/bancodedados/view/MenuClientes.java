@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package views;
+package fatec.bancodedados.view;
 
 //TODO: Aguardando a classe Endereco
 
@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.Endereco;
-import static service.viaCEPService.buscarEnderecoPorCep;
+import static fatec.bancodedados.service.viaCEPService.buscarEnderecoPorCep;
 
 /**
  *

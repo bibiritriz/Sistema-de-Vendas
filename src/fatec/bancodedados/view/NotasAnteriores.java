@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package views;
+package fatec.bancodedados.view;
 
 import fatec.bancodedados.dao.NotaFiscalDAO;
 import fatec.bancodedados.model.NotaFiscal;

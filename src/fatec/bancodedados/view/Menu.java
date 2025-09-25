@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package views;
+package fatec.bancodedados.view;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
-
 /**
  *
  * @author Isaqu
@@ -19,7 +18,6 @@ public class Menu extends javax.swing.JFrame {
      * Creates new form Menu
      */
     public Menu() {
-        System.out.println(getClass().getResource("/views/fireren.png"));
         initComponents();
         ajustar();
         ajustarImagem();
@@ -46,7 +44,6 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("TelaHome");
-        setMaximumSize(new java.awt.Dimension(500, 300));
         setMinimumSize(new java.awt.Dimension(500, 300));
 
         ClienteButton.setText("Clientes");

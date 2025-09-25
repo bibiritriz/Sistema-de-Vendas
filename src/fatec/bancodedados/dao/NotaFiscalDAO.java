@@ -1,6 +1,6 @@
 package fatec.bancodedados.dao;
 
-import connection.Conexao;
+import fatec.bancodedados.util.Conexao;
 import fatec.bancodedados.model.NotaFiscal;
 import fatec.bancodedados.model.Produto;
 import fatec.bancodedados.model.ProdutoNota;

@@ -1,4 +1,4 @@
-package views;
+package fatec.bancodedados.view;
 
 import fatec.bancodedados.dao.ProdutoDAO;
 import javax.swing.JOptionPane;
