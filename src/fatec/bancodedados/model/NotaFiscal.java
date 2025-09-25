@@ -28,6 +28,7 @@ public class NotaFiscal {
     }
     
     public NotaFiscal() {
+        itens = new ArrayList<>();
     }
 
     public List<ProdutoNota> getItens() {

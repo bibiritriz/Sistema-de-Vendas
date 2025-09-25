@@ -30,7 +30,7 @@ public class NotaFiscalDAO {
     
     public NotaFiscal inserir(NotaFiscal notaFiscal){
         String sqlNF = "INSERT INTO notasfiscais (codCliente) values (?)";
-        String sqlItem = "INSERT INTO ProdutosNotas (codNota, codProduto, qtdVendida) VALUES (?, ?, ?)";
+        String sqlItem = "INSERT INTO produtosNotas (codNota, codProduto, qtdVendida) VALUES (?, ?, ?)";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sqlNF, 
@@ -82,8 +82,6 @@ public class NotaFiscalDAO {
             stmt.setInt(1, codNota);
             
             rs = stmt.executeQuery();
-         
-            List<ProdutoNota> itens = new ArrayList<>();
             
             while (rs.next()) {
                 int codProd = rs.getInt("codProduto");
@@ -91,10 +89,8 @@ public class NotaFiscalDAO {
                 Produto p = pDAO.getProduto(codProd);
                 
                 ProdutoNota pN = new ProdutoNota(codNota, p, rs.getInt("qtdVendida"));
-                itens.add(pN);
+                n.addItem(pN);
             }
-            
-            n.setItens(itens);
             
             return n;
         } catch(SQLException e) {
@@ -125,6 +121,12 @@ public class NotaFiscalDAO {
                     Collections.nCopies(notaFiscalMap.size(), "?"));
             sql += placeholders + ")";
             
+            int index = 1;
+            for (Integer codNota : notaFiscalMap.keySet()) {
+               stmt.setInt(index, codNota);
+               index++;
+            }
+            
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
             
@@ -141,6 +143,6 @@ public class NotaFiscalDAO {
             System.out.println("Erro ao listar notasFiscais: " + e.getMessage());
         }
         
-        return lista;
+        return notasFiscais;
     }
 }

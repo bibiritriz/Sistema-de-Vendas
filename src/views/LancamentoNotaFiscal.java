@@ -5,17 +5,37 @@
  */
 package views;
 
+
+import fatec.bancodedados.dao.ClienteDAO;
+import fatec.bancodedados.dao.NotaFiscalDAO;
+import fatec.bancodedados.dao.ProdutoDAO;
+import fatec.bancodedados.model.Cliente;
+import fatec.bancodedados.model.NotaFiscal;
+import fatec.bancodedados.model.Produto;
+import fatec.bancodedados.model.ProdutoNota;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Beatriz Camargo
  */
 public class LancamentoNotaFiscal extends javax.swing.JFrame {
-
-    /**
-     * Creates new form LancamentoNotaFiscal
-     */
+    private DefaultTableModel tblClienteModel;
+    private DefaultTableModel tblProdutoModel;
+    private DefaultListModel<String> listaProdutosModel;
+    
     public LancamentoNotaFiscal() {
         initComponents();
+        tblClienteModel = (DefaultTableModel) TBL_Clientes.getModel();
+        tblProdutoModel = (DefaultTableModel) TBL_Produtos.getModel();
+        listaProdutosModel = new DefaultListModel<>();
+        ListaProdutos.setModel(listaProdutosModel);
+        carregarProdutos();
+        carregarClientes();
     }
 
     /**
@@ -27,21 +47,250 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TBL_Produtos = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TBL_Clientes = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        NomeUsuarioLabel = new javax.swing.JLabel();
+        CodClienteInput = new javax.swing.JTextField();
+        SelecionarClienteBotao = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ListaProdutos = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        SelecionarProdutoBotao = new javax.swing.JButton();
+        NovaNotaBotao = new javax.swing.JButton();
+        NotasAnterioresBotao = new javax.swing.JButton();
+        LimparButton = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Notas Fiscais");
+
+        TBL_Produtos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Nome", "Preco", "Descricao"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TBL_Produtos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(TBL_Produtos);
+        if (TBL_Produtos.getColumnModel().getColumnCount() > 0) {
+            TBL_Produtos.getColumnModel().getColumn(0).setResizable(false);
+            TBL_Produtos.getColumnModel().getColumn(1).setResizable(false);
+            TBL_Produtos.getColumnModel().getColumn(2).setResizable(false);
+            TBL_Produtos.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        TBL_Clientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Nome", "Email", "Telefone"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TBL_Clientes.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(TBL_Clientes);
+        if (TBL_Clientes.getColumnModel().getColumnCount() > 0) {
+            TBL_Clientes.getColumnModel().getColumn(0).setResizable(false);
+            TBL_Clientes.getColumnModel().getColumn(1).setResizable(false);
+            TBL_Clientes.getColumnModel().getColumn(2).setResizable(false);
+            TBL_Clientes.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setText("Notas Fiscais");
+
+        NomeUsuarioLabel.setText("Código Cliente");
+
+        CodClienteInput.setEnabled(false);
+
+        SelecionarClienteBotao.setText("Selecionar");
+        SelecionarClienteBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelecionarClienteBotaoActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(ListaProdutos);
+
+        jLabel2.setText("Produtos Selecionados");
+
+        SelecionarProdutoBotao.setText("Selecionar");
+        SelecionarProdutoBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelecionarProdutoBotaoActionPerformed(evt);
+            }
+        });
+
+        NovaNotaBotao.setText("AdicionarNota");
+        NovaNotaBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NovaNotaBotaoActionPerformed(evt);
+            }
+        });
+
+        NotasAnterioresBotao.setText("Notas Anteriores");
+        NotasAnterioresBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NotasAnterioresBotaoActionPerformed(evt);
+            }
+        });
+
+        LimparButton.setText("Limpar");
+        LimparButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LimparButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(NomeUsuarioLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(CodClienteInput)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(SelecionarClienteBotao)
+                                    .addComponent(SelecionarProdutoBotao)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(NovaNotaBotao)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(NotasAnterioresBotao)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LimparButton)))
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(NomeUsuarioLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SelecionarClienteBotao))
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SelecionarProdutoBotao))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(NovaNotaBotao)
+                            .addComponent(NotasAnterioresBotao)
+                            .addComponent(LimparButton)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void SelecionarClienteBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelecionarClienteBotaoActionPerformed
+       if (TBL_Clientes.getSelectedRowCount() == 1) {
+       int linha = TBL_Clientes.getSelectedRow();
+       String cod = TBL_Clientes.getValueAt(linha, 0).toString();
+       CodClienteInput.setText(cod);
+       } else if (TBL_Clientes.getRowCount() == 0) {
+           JOptionPane.showMessageDialog(this, "Tabela vazia.");
+       } else {
+           JOptionPane.showMessageDialog(this, "Por favor, selecione apenas uma linha para a operação.");
+       }
+    }//GEN-LAST:event_SelecionarClienteBotaoActionPerformed
+
+    private void SelecionarProdutoBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelecionarProdutoBotaoActionPerformed
+        int[] linhasSelecionadas = TBL_Produtos.getSelectedRows();
+        System.out.println("Clicou: " + linhasSelecionadas[0]);
+        List<String> lista = new ArrayList<>();
+
+        for (int i : linhasSelecionadas) {
+            String nome = tblProdutoModel.getValueAt(i, 0).toString();
+            listaProdutosModel.add(i, nome);
+        }
+    }//GEN-LAST:event_SelecionarProdutoBotaoActionPerformed
+
+    private void NotasAnterioresBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasAnterioresBotaoActionPerformed
+        new NotasAnteriores().setVisible(true);
+    }//GEN-LAST:event_NotasAnterioresBotaoActionPerformed
+
+    private void NovaNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovaNotaBotaoActionPerformed
+        NotaFiscal nf = new NotaFiscal();
+        
+        nf.setCodCliente(Integer.parseInt(CodClienteInput.getText()));
+        
+        for(int i = 0; i < listaProdutosModel.getSize(); i++){
+            ProdutoNota pn = new ProdutoNota();
+            Produto p = new ProdutoDAO().getProduto(Integer.parseInt(listaProdutosModel.get(i)));
+            pn.setProduto(p);
+            pn.setQtdVendida(1);
+            nf.addItem(pn);
+        }
+        
+        new NotaFiscalDAO().inserir(nf);
+        limpar();
+    }//GEN-LAST:event_NovaNotaBotaoActionPerformed
+
+    private void LimparButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparButtonActionPerformed
+        limpar();
+    }//GEN-LAST:event_LimparButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +328,52 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField CodClienteInput;
+    private javax.swing.JButton LimparButton;
+    private javax.swing.JList<String> ListaProdutos;
+    private javax.swing.JLabel NomeUsuarioLabel;
+    private javax.swing.JButton NotasAnterioresBotao;
+    private javax.swing.JButton NovaNotaBotao;
+    private javax.swing.JButton SelecionarClienteBotao;
+    private javax.swing.JButton SelecionarProdutoBotao;
+    private javax.swing.JTable TBL_Clientes;
+    private javax.swing.JTable TBL_Produtos;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
+    public void carregarProdutos(){
+        List<Produto> produtos = new ProdutoDAO().getProdutos();
+        tblProdutoModel.setRowCount(0);
+        for(Produto p : produtos){
+            if(p.getQtdeEstoque() == 0) continue;
+            tblProdutoModel.addRow(new Object[]{
+                p.getCodProd(),
+                p.getNome(),
+                p.getPrecoVenda(),
+                p.getDescricao(),
+            });
+        }   
+    }
+    
+    public void carregarClientes(){
+        List<Cliente> clientes = new ClienteDAO().getClientes();
+        tblClienteModel.setRowCount(0);
+        for(Cliente cl : clientes){
+            tblClienteModel.addRow(new Object[]{
+                cl.getCod(),
+                cl.getNome(),
+                cl.getEmail(),
+                cl.getTelefone()
+            });
+        }
+    }
+    
+    public void limpar(){
+        CodClienteInput.setText("");
+        listaProdutosModel.setSize(0);
+    }
+
 }
