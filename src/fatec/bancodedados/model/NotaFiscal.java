@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fatec.bancodedados.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -18,16 +15,43 @@ public class NotaFiscal {
     private Date dataVenda;
     private int qtdTotal;
     private double subTotal;
+    private List<ProdutoNota> itens;
 
-    public NotaFiscal(int codCliente, Date dataVenda, int qtdTotal, double subTotal) {
+    public NotaFiscal(int codNota, int codCliente, 
+            Date dataVenda, int qtdTotal, double subTotal) {
         this.codNota = codNota;
         this.codCliente = codCliente;
         this.dataVenda = dataVenda;
         this.qtdTotal = qtdTotal;
         this.subTotal = subTotal;
+        itens = new ArrayList<>();
+    }
+    
+    public NotaFiscal() {
     }
 
-    public NotaFiscal() {
+    public List<ProdutoNota> getItens() {
+        return itens;
+    }
+
+    public void addItem(ProdutoNota item) {
+        itens.add(item);
+    }
+
+    public void setCodCliente(int codCliente) {
+        this.codCliente = codCliente;
+    }
+
+    public void setDataVenda(Date dataVenda) {
+        this.dataVenda = dataVenda;
+    }
+
+    public void setQtdTotal(int qtdTotal) {
+        this.qtdTotal = qtdTotal;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
     }
 
     public void setCodNota(int codNota) {

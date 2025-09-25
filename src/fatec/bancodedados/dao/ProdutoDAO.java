@@ -26,7 +26,10 @@ public class ProdutoDAO {
     }
     
     public Produto inserir(Produto produto){
-        String sql = "INSERT INTO produtos (nome, descricao, precoVenda, qtdEstoque) values (?, ?, ?, ?)";
+        String sql = "INSERT INTO produtos (nome, "
+                + "descricao, "
+                + "precoVenda, "
+                + "qtdEstoque) values (?, ?, ?, ?)";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -48,16 +51,22 @@ public class ProdutoDAO {
     }
     
     public Produto getProduto(int codProduto){
-        String sql = "SELECT * FROM produtos WHERE id = ?";
+        String sql = "SELECT * FROM produtos WHERE codProduto = ?";
         
         try{
-            PreparedStatement stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement stmt = conn.prepareStatement(sql, 
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                    ResultSet.CONCUR_UPDATABLE);
+
             stmt.setInt(1, codProduto);
     
             ResultSet rs = stmt.executeQuery();
             rs.first();
             
-            Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nome"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
+            Produto p = new Produto(rs.getInt("codProduto"), 
+                    rs.getString("nome"), 
+                    rs.getDouble("precoVenda"), 
+                    rs.getInt("qtdEstoque"));
             
             return p;
         } catch(SQLException e) {
@@ -67,7 +76,9 @@ public class ProdutoDAO {
     }
     
     public void editar(Produto produto){
-        String sql = "UPDATE produtos set nome = ?, descricao = ?, precoVenda = ?, qtdEstoque = ? where codProduto = ?";
+        String sql = "UPDATE produtos set nome = ?, "
+                + "descricao = ?, precoVenda = ?, "
+                + "qtdEstoque = ? where codProduto = ?";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
