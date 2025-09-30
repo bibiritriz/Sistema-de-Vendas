@@ -72,7 +72,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel1.setAlignmentX(120.0F);
         jLabel1.setAlignmentY(0.0F);
 
-        frieren.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/fireren.png"))); // NOI18N
+        frieren.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/fireren.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -174,7 +174,7 @@ public class Menu extends javax.swing.JFrame {
     }
     private void ajustarImagem() {
         // Carrega a imagem original
-        ImageIcon icon = new ImageIcon(getClass().getResource("/views/fireren.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/resource/fireren.png"));
 
         // Redimensiona para caber no JLabel
         Image img = icon.getImage();

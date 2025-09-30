@@ -75,7 +75,7 @@ public class MenuClientes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        criarBotao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/add.png"))); // NOI18N
+        criarBotao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/add.png"))); // NOI18N
         criarBotao.setText("Salvar");
         criarBotao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,7 +90,7 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
-        ExcluirButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/delete.png"))); // NOI18N
+        ExcluirButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/delete.png"))); // NOI18N
         ExcluirButton.setText("Excluir");
         ExcluirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,7 +98,7 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
-        BotaoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/pencil.png"))); // NOI18N
+        BotaoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/pencil.png"))); // NOI18N
         BotaoEditar.setText("Editar");
         BotaoEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -276,7 +276,7 @@ public class MenuClientes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/userIcon.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/userIcon.png"))); // NOI18N
         jLabel2.setText("Gerenciamento de Clientes");
 
         ClienteTable.setModel(new javax.swing.table.DefaultTableModel(
