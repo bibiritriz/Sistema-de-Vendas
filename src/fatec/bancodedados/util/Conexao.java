@@ -26,7 +26,7 @@ Create database sistemavendas;
     ('Avenida Afonso Pena', 'Sala 802', '4001', 'Serra', 'MG', '30130-009', 'Belo Horizonte');
 
   CREATE TABLE Clientes (  
-    codCliente INT PRIMARY KEY AUTO_INCREMENT,  
+    cpfCliente varchar(11) PRIMARY KEY,  
     nome VARCHAR(255) NOT NULL,  
     email VARCHAR(255) UNIQUE NOT NULL,  
     telefone VARCHAR(15) NOT NULL,  
@@ -34,10 +34,10 @@ Create database sistemavendas;
     CONSTRAINT fk_cliente_endereco FOREIGN KEY (codEndereco) REFERENCES Enderecos (codEndereco)  
   );  
 
-    INSERT INTO Clientes (nome, email, telefone, codEndereco) VALUES
-    ('João da Silva', 'joao.silva@email.com', '(11) 98765-4321', 1),
-    ('Maria Oliveira', 'maria.o@email.com', '(21) 91234-5678', 2),
-    ('Carlos Souza', 'carlos.souza@email.com', '(31) 95555-4444', 3);
+    INSERT INTO Clientes (cpfCliente, nome, email, telefone, codEndereco) VALUES
+    ('12345678901', 'João da Silva', 'joao.silva@email.com', '(11) 98765-4321', 1),
+    ('98765432109', 'Maria Oliveira', 'maria.o@email.com', '(21) 91234-5678', 2),
+    ('11122233344', 'Carlos Souza', 'carlos.souza@email.com', '(31) 95555-4444', 3);
 
   CREATE TABLE Produtos (  
     codProduto INT PRIMARY KEY AUTO_INCREMENT,  
@@ -55,17 +55,17 @@ Create database sistemavendas;
 
   CREATE TABLE NotasFiscais (  
     codNota INT PRIMARY KEY AUTO_INCREMENT,  
-    codCliente INT NOT NULL,  
+    cpfCliente varchar(11) NOT NULL,  
     dataVenda DATETIME DEFAULT CURRENT_TIMESTAMP,  
     qtdTotal INT NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,  
     status BINARY not null default 1, 
-    CONSTRAINT fk_notafiscal_cliente FOREIGN KEY (codCliente) REFERENCES Clientes (codCliente)  
+    CONSTRAINT fk_notafiscal_cliente FOREIGN KEY (cpfCliente) REFERENCES Clientes (cpfCliente)  
   );  
 
-    INSERT INTO NotasFiscais (codCliente) VALUES
-    (1),
-	(2);
+    INSERT INTO NotasFiscais (cpfCliente) VALUES
+    ('12345678901'),
+    ('98765432109');
 
   CREATE TABLE ProdutosNotas (  
     codNota INT NOT NULL,  
@@ -76,7 +76,7 @@ Create database sistemavendas;
     CONSTRAINT fk_produtosnotas_produto FOREIGN KEY (codProduto) REFERENCES Produtos (codProduto)  
   );
 
-	INSERT INTO ProdutosNotas (codNota, codProduto, qtdVendida) VALUES
+    INSERT INTO ProdutosNotas (codNota, codProduto, qtdVendida) VALUES
     (1, 1, 1), 
     (1, 2, 1),
     (2, 3, 2),
@@ -200,6 +200,27 @@ Create database sistemavendas;
         END$$
 
     DELIMITER ; 
+    
+    DELIMITER $$
+
+        CREATE TRIGGER tg_produto_estoque_pn
+        BEFORE INSERT ON ProdutosNotas
+        FOR EACH ROW
+        BEGIN
+            DECLARE v_qtd_estoque INT;
+
+            SELECT qtdEstoque INTO v_qtd_estoque
+            FROM Produtos
+            WHERE codProduto = NEW.codProduto;
+
+            IF v_qtd_estoque < NEW.qtdVendida THEN
+               SIGNAL SQLSTATE '45000'
+                SET MESSAGE_TEXT = 'Erro: A quantidade vendida é maior do que a quantidade disponível em estoque.';
+            END IF;
+        END$$
+
+    DELIMITER ;
+
   * 
   * 
  */

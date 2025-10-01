@@ -29,14 +29,14 @@ public class NotaFiscalDAO {
     }
     
     public NotaFiscal inserir(NotaFiscal notaFiscal){
-        String sqlNF = "INSERT INTO notasfiscais (codCliente) values (?)";
+        String sqlNF = "INSERT INTO notasfiscais (cpfCliente) values (?)";
         String sqlItem = "INSERT INTO produtosNotas (codNota, "
                 + "codProduto, qtdVendida) VALUES (?, ?, ?)";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sqlNF, 
                     Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, notaFiscal.getCodCliente());
+            stmt.setString(1, notaFiscal.getCpfCliente());
             stmt.execute();
             
             ResultSet rs = stmt.getGeneratedKeys();
@@ -75,7 +75,7 @@ public class NotaFiscalDAO {
             rs.first();
             
             NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
-                    rs.getInt("codCliente"), 
+                    rs.getString("cpfCliente"), 
                     rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
             
@@ -112,7 +112,7 @@ public class NotaFiscalDAO {
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
                 NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
-                    rs.getInt("codCliente"), 
+                    rs.getString("cpfCliente"), 
                     rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
                  notasFiscais.add(n);
