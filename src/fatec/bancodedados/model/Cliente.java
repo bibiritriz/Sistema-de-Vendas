@@ -10,31 +10,44 @@ public class Cliente {
     private int codEndereco;
     private String email;
     private String telefone;
+    private String cpf;
 
     public Cliente(
             int codCliente, 
             String nome, 
             int codEndereco, 
             String email, 
-            String telefone
+            String telefone,
+            String cpf
     ){
         this.codCliente = codCliente;
         this.nome = nome;
         this.codEndereco = codEndereco;
         this.email = email;
         this.telefone = telefone;
+        this.cpf = cpf;
     };
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
     public Cliente(
             String nome, 
             int codEndereco, 
             String email, 
-            String telefone
+            String telefone,
+            String cpf
     ){
         this.nome = nome;
         this.codEndereco = codEndereco;
         this.email = email;
         this.telefone = telefone;
+        this.cpf = cpf;
     };
     
     public Cliente(){};
