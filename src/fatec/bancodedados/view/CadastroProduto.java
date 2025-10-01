@@ -4,7 +4,9 @@ import fatec.bancodedados.dao.ProdutoDAO;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Produto;
+import fatec.bancodedados.util.CustomFilter;
 import java.util.List;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -18,6 +20,7 @@ public class CadastroProduto extends javax.swing.JFrame {
     public CadastroProduto() {
         initComponents();
         listarProdutos();
+        carregarValidacao();
         panelCod.setVisible(false);
     }
 
@@ -470,6 +473,13 @@ public class CadastroProduto extends javax.swing.JFrame {
                 new CadastroProduto().setVisible(true);
             }
         });
+        
+    }
+    private void carregarValidacao(){
+        ((AbstractDocument) tfPreco.getDocument())
+        .setDocumentFilter(new CustomFilter(10, CustomFilter.Tipo.NUMEROS));
+        ((AbstractDocument) tfQuantidade.getDocument())
+        .setDocumentFilter(new CustomFilter(4, CustomFilter.Tipo.NUMEROS));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
