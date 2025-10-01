@@ -11,18 +11,18 @@ import java.util.List;
 public class NotaFiscal {
 
     private int codNota;
-    private int codCliente;
+    private String cpfCliente;
     private Date dataVenda;
     private int qtdTotal;
     private double subTotal;
     private boolean status;
     private List<ProdutoNota> itens;
 
-    public NotaFiscal(int codNota, int codCliente, 
+    public NotaFiscal(int codNota, String cpfCliente, 
             Date dataVenda, int qtdTotal, double subTotal,
             boolean status) {
         this.codNota = codNota;
-        this.codCliente = codCliente;
+        this.cpfCliente = cpfCliente;
         this.dataVenda = dataVenda;
         this.qtdTotal = qtdTotal;
         this.subTotal = subTotal;
@@ -42,8 +42,8 @@ public class NotaFiscal {
         itens.add(item);
     }
 
-    public void setCodCliente(int codCliente) {
-        this.codCliente = codCliente;
+    public void setCpfCliente(String cpfCliente) {
+        this.cpfCliente = cpfCliente;
     }
 
     public void setDataVenda(Date dataVenda) {
@@ -66,8 +66,8 @@ public class NotaFiscal {
         return codNota;
     }
 
-    public int getCodCliente() {
-        return codCliente;
+    public String getCpfCliente() {
+        return cpfCliente;
     }
 
     public Date getDataVenda() {

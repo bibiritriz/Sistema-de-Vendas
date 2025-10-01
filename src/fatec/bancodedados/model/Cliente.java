@@ -5,43 +5,37 @@ package fatec.bancodedados.model;
  * @author Isaqu
  */
 public class Cliente {
-    private int codCliente;
     private String nome;
     private int codEndereco;
     private String email;
     private String telefone;
-
-    public Cliente(
-            int codCliente, 
-            String nome, 
-            int codEndereco, 
-            String email, 
-            String telefone
-    ){
-        this.codCliente = codCliente;
-        this.nome = nome;
-        this.codEndereco = codEndereco;
-        this.email = email;
-        this.telefone = telefone;
-    };
+    private String cpf;
 
     public Cliente(
             String nome, 
             int codEndereco, 
             String email, 
-            String telefone
+            String telefone,
+            String cpf
     ){
         this.nome = nome;
         this.codEndereco = codEndereco;
         this.email = email;
         this.telefone = telefone;
+        this.cpf = cpf;
     };
+    
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     
     public Cliente(){};
     
-    public int getCod(){
-        return this.codCliente;
-    }
     
     public String getNome() {
         return nome;
@@ -63,9 +57,6 @@ public class Cliente {
         return email;
     }
     
-    public void setCod(int codCliente){
-        this.codCliente = codCliente;
-    }
 
     public void setEmail(String email) {
         this.email = email;

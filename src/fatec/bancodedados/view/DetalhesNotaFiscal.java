@@ -262,7 +262,7 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
    private void carregarDados() {
         DataVendaInput.setText(nf.getDataVenda().toString());
 
-        Cliente nfCliente = new ClienteDAO().getCliente(nf.getCodCliente());
+        Cliente nfCliente = new ClienteDAO().getCliente(nf.getCpfCliente());
 
         NomeClineteInput.setText(nfCliente.getNome());
         SubTotalInput.setText(Double.toString(nf.getSubTotal()));
