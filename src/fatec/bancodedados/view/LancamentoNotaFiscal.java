@@ -70,7 +70,6 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         TBL_NotasAnteriores = new javax.swing.JTable();
         VerdetalhesBotao = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Notas Fiscais");
@@ -228,13 +227,6 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
             }
         });
 
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -276,8 +268,6 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
                                 .addComponent(NovaNotaBotao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(LimparButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancelar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(VerdetalhesBotao)))))
                 .addContainerGap())
@@ -320,8 +310,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
                     .addComponent(NovaNotaBotao)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(LimparButton)
-                        .addComponent(VerdetalhesBotao)
-                        .addComponent(btnCancelar))))
+                        .addComponent(VerdetalhesBotao))))
         );
 
         pack();
@@ -398,37 +387,9 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         int codNota = Integer.parseInt(TBL_NotasAnteriores.getValueAt(linha, 0).toString());
         
         NotaFiscal nf = new NotaFiscalDAO().getNotaFiscal(codNota);
-        new DetalhesNotaFiscal(nf).setVisible(true);
+        new DetalhesNotaFiscal(nf, this).setVisible(true);
         }
     }//GEN-LAST:event_VerdetalhesBotaoActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        if(validarSelecaoDeLinha()){
-            int linhaSelecionada = TBL_NotasAnteriores.getSelectedRow();
-            int codNota = Integer.parseInt(TBL_NotasAnteriores.getValueAt(linhaSelecionada, 0).toString());
-            
-            if(TBL_NotasAnteriores.getValueAt(linhaSelecionada, 5).toString().equals("Cancelada")){
-                JOptionPane.showMessageDialog(this, "Essa nota fiscal já foi cancelada!");
-                return;
-            }
-            
-            int resposta = JOptionPane.showConfirmDialog(
-            this, 
-            "Tem certeza que deseja cancelar a Nota Fiscal Nº " + codNota + "?", 
-            "Confirmação de Cancelamento", 
-            JOptionPane.YES_NO_OPTION
-             );
-
-            if (resposta == JOptionPane.NO_OPTION) {
-                return;
-            }
-            
-            NotaFiscalDAO nDAO = new NotaFiscalDAO();
-            nDAO.cancelarNotaFiscal(codNota);
-            
-            JOptionPane.showMessageDialog(this, "Nota Fiscal cancelada com sucesso!");
-        }
-    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -477,7 +438,6 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     private javax.swing.JTable TBL_NotasAnteriores;
     private javax.swing.JTable TBL_Produtos;
     private javax.swing.JButton VerdetalhesBotao;
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -524,7 +484,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         }
     }
     
-    private void carregarNotasFiscais(){
+    public void carregarNotasFiscais(){
         List<NotaFiscal> notasFiscais = new NotaFiscalDAO().getNotaFiscais();
         tblNotasAnterioresModel.setRowCount(0);
         for(NotaFiscal nf : notasFiscais){

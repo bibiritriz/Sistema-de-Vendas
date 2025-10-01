@@ -6,6 +6,7 @@
 package fatec.bancodedados.view;
 
 import fatec.bancodedados.dao.ClienteDAO;
+import fatec.bancodedados.dao.NotaFiscalDAO;
 import fatec.bancodedados.dao.ProdutoDAO;
 import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.NotaFiscal;
@@ -20,20 +21,24 @@ import javax.swing.table.DefaultTableModel;
  * @author isaqu
  */
 public class DetalhesNotaFiscal extends javax.swing.JFrame {
+
     private NotaFiscal nf;
+    private LancamentoNotaFiscal telaPrincipal;
     private DefaultTableModel tblProdutosModel;
-    
+
     /**
      * Creates new form DetalhesNotaFiscal
+     *
      * @param nf
      */
-    public DetalhesNotaFiscal(NotaFiscal nf) {
+    public DetalhesNotaFiscal(NotaFiscal nf, LancamentoNotaFiscal telaPrincipal) {
         initComponents();
         this.nf = nf;
         tblProdutosModel = (DefaultTableModel) TBL_Produtos.getModel();
+        this.telaPrincipal = telaPrincipal;
         carregarDados();
     }
-    
+
     public DetalhesNotaFiscal() {
         initComponents();
     }
@@ -56,6 +61,8 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         SubTotalInput = new javax.swing.JTextField();
         CancelarNotaBotao = new javax.swing.JButton();
+        StatusInput = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Detalhes Nota");
@@ -111,6 +118,10 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
             }
         });
 
+        StatusInput.setEnabled(false);
+
+        jLabel4.setText("Status:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,25 +131,25 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(NomeClineteInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(DataVendaInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 5, Short.MAX_VALUE)))
-                        .addContainerGap())
+                            .addComponent(jLabel1)
+                            .addComponent(NomeClineteInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(DataVendaInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(CancelarNotaBotao, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CancelarNotaBotao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(SubTotalInput, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(59, 59, 59))))
+                            .addComponent(SubTotalInput, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(StatusInput, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,25 +162,53 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NomeClineteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DataVendaInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SubTotalInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CancelarNotaBotao))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(StatusInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CancelarNotaBotao))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SubTotalInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void CancelarNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarNotaBotaoActionPerformed
-        int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Cancelar", JOptionPane.YES_NO_OPTION);
-        if(resposta == JOptionPane.YES_OPTION){
-            //TODO: Implementar lógica de cancelar quando a propriedade 'status' estiver disponível
+
+        if (!nf.isStatus()) {
+            JOptionPane.showMessageDialog(this, "Essa nota fiscal já foi cancelada!");
+            return;
         }
+
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Tem certeza que deseja cancelar a Nota Fiscal Nº " + nf.getCodNota() + "?",
+                "Confirmação de Cancelamento",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (resposta == JOptionPane.NO_OPTION) {
+            return;
+        }
+
+        NotaFiscalDAO nDAO = new NotaFiscalDAO();
+        nDAO.cancelarNotaFiscal(nf.getCodNota());
+        nf.setStatus(false);
+
+        JOptionPane.showMessageDialog(this, "Nota Fiscal cancelada com sucesso!");
+        
+        telaPrincipal.carregarNotasFiscais();
+        this.dispose();
     }//GEN-LAST:event_CancelarNotaBotaoActionPerformed
 
     /**
@@ -211,33 +250,35 @@ public class DetalhesNotaFiscal extends javax.swing.JFrame {
     private javax.swing.JButton CancelarNotaBotao;
     private javax.swing.JTextField DataVendaInput;
     private javax.swing.JTextField NomeClineteInput;
+    private javax.swing.JTextField StatusInput;
     private javax.swing.JTextField SubTotalInput;
     private javax.swing.JTable TBL_Produtos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-   public void carregarDados(){
-       DataVendaInput.setText(nf.getDataVenda().toString());
-       
-       
-       Cliente nfCliente = new ClienteDAO().getCliente(nf.getCodCliente());
-       
-       NomeClineteInput.setText(nfCliente.getNome());
-       SubTotalInput.setText(Double.toString(nf.getSubTotal()));
-       
-       List<ProdutoNota> nfProdutos = nf.getItens();
-       
-       for(ProdutoNota pn : nfProdutos){
-           Produto p = pn.getProduto();
-           tblProdutosModel.addRow(new Object[]{
-               p.getCodProd(),
-               p.getNome(),
-               p.getPrecoVenda(),
-               pn.getQtdVendida(),
-               p.getPrecoVenda() * pn.getQtdVendida()
-           });
-       }
-   }
+   private void carregarDados() {
+        DataVendaInput.setText(nf.getDataVenda().toString());
+
+        Cliente nfCliente = new ClienteDAO().getCliente(nf.getCodCliente());
+
+        NomeClineteInput.setText(nfCliente.getNome());
+        SubTotalInput.setText(Double.toString(nf.getSubTotal()));
+        StatusInput.setText(nf.isStatus() ? "Autorizada" : "Cancelada");
+
+        List<ProdutoNota> nfProdutos = nf.getItens();
+
+        for (ProdutoNota pn : nfProdutos) {
+            Produto p = pn.getProduto();
+            tblProdutosModel.addRow(new Object[]{
+                p.getCodProd(),
+                p.getNome(),
+                p.getPrecoVenda(),
+                pn.getQtdVendida(),
+                p.getPrecoVenda() * pn.getQtdVendida(),
+            });
+        }
+    }
 }
