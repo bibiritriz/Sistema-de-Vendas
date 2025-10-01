@@ -15,15 +15,18 @@ public class NotaFiscal {
     private Date dataVenda;
     private int qtdTotal;
     private double subTotal;
+    private boolean status;
     private List<ProdutoNota> itens;
 
     public NotaFiscal(int codNota, int codCliente, 
-            Date dataVenda, int qtdTotal, double subTotal) {
+            Date dataVenda, int qtdTotal, double subTotal,
+            boolean status) {
         this.codNota = codNota;
         this.codCliente = codCliente;
         this.dataVenda = dataVenda;
         this.qtdTotal = qtdTotal;
         this.subTotal = subTotal;
+        this.status = status;
         itens = new ArrayList<>();
     }
     
@@ -73,6 +76,14 @@ public class NotaFiscal {
 
     public int getQtdTotal() {
         return qtdTotal;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public double getSubTotal() {

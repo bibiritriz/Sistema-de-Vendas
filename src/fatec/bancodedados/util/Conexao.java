@@ -6,8 +6,7 @@ import java.sql.DriverManager;
  *
  * @author Beatriz Camargo
 
-CREATE DATABASE sistemavendas;  
-
+Create database sistemavendas;
   USE sistemavendas;  
 
   CREATE TABLE Enderecos(  
@@ -19,9 +18,12 @@ CREATE DATABASE sistemavendas;
       uf char(2) not null,  
       cep varchar(9) not null,
       cidade varchar(255) not null
-  );  
+  ); 
 
-
+    INSERT INTO Enderecos (logradouro, complemento, numCasa, bairro, uf, cep, cidade) VALUES
+    ('Avenida Paulista', 'Apto 1501', '1000', 'Bela Vista', 'SP', '01310-100', 'São Paulo'),
+    ('Rua das Laranjeiras', NULL, '540', 'Laranjeiras', 'RJ', '22240-006', 'Rio de Janeiro'),
+    ('Avenida Afonso Pena', 'Sala 802', '4001', 'Serra', 'MG', '30130-009', 'Belo Horizonte');
 
   CREATE TABLE Clientes (  
     codCliente INT PRIMARY KEY AUTO_INCREMENT,  
@@ -30,10 +32,12 @@ CREATE DATABASE sistemavendas;
     telefone VARCHAR(15) NOT NULL,  
     codEndereco INT NOT NULL,  
     CONSTRAINT fk_cliente_endereco FOREIGN KEY (codEndereco) REFERENCES Enderecos (codEndereco)  
-
   );  
 
-
+    INSERT INTO Clientes (nome, email, telefone, codEndereco) VALUES
+    ('João da Silva', 'joao.silva@email.com', '(11) 98765-4321', 1),
+    ('Maria Oliveira', 'maria.o@email.com', '(21) 91234-5678', 2),
+    ('Carlos Souza', 'carlos.souza@email.com', '(31) 95555-4444', 3);
 
   CREATE TABLE Produtos (  
     codProduto INT PRIMARY KEY AUTO_INCREMENT,  
@@ -42,8 +46,12 @@ CREATE DATABASE sistemavendas;
     precoVenda DECIMAL(10,2) NOT NULL,  
     qtdEstoque INT NOT NULL DEFAULT 0  CHECK(qtdEstoque >= 0)
   );  
-
-
+  
+     INSERT INTO Produtos (nome, descricao, precoVenda, qtdEstoque) VALUES
+    ('Notebook Gamer Alien', 'Notebook com placa de vídeo RTX 4080 e 32GB RAM', 12500.00, 15),
+    ('Mouse Sem Fio Logitech', 'Mouse ergonômico com 8 botões programáveis', 350.50, 80),
+    ('Teclado Mecânico Redragon', 'Teclado com switches blue e iluminação RGB', 499.90, 50),
+    ('Monitor Ultrawide LG 34"', 'Monitor com resolução 4K e 144Hz', 3200.00, 25);
 
   CREATE TABLE NotasFiscais (  
     codNota INT PRIMARY KEY AUTO_INCREMENT,  
@@ -51,10 +59,13 @@ CREATE DATABASE sistemavendas;
     dataVenda DATETIME DEFAULT CURRENT_TIMESTAMP,  
     qtdTotal INT NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,  
+    status BINARY not null default 1, 
     CONSTRAINT fk_notafiscal_cliente FOREIGN KEY (codCliente) REFERENCES Clientes (codCliente)  
   );  
 
-
+    INSERT INTO NotasFiscais (codCliente) VALUES
+    (1),
+	(2);
 
   CREATE TABLE ProdutosNotas (  
     codNota INT NOT NULL,  
@@ -64,6 +75,12 @@ CREATE DATABASE sistemavendas;
     CONSTRAINT fk_produtosnotas_nota FOREIGN KEY (codNota) REFERENCES NotasFiscais (codNota),
     CONSTRAINT fk_produtosnotas_produto FOREIGN KEY (codProduto) REFERENCES Produtos (codProduto)  
   );
+
+	INSERT INTO ProdutosNotas (codNota, codProduto, qtdVendida) VALUES
+    (1, 1, 1), 
+    (1, 2, 1),
+    (2, 3, 2),
+    (2, 4, 1);
   
     DELIMITER $$
 
@@ -182,9 +199,7 @@ CREATE DATABASE sistemavendas;
             WHERE nf.codNota = NEW.codNota;
         END$$
 
-    DELIMITER ;
-
-    
+    DELIMITER ; 
   * 
   * 
  */
