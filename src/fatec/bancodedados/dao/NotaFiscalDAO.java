@@ -30,7 +30,8 @@ public class NotaFiscalDAO {
     
     public NotaFiscal inserir(NotaFiscal notaFiscal){
         String sqlNF = "INSERT INTO notasfiscais (codCliente) values (?)";
-        String sqlItem = "INSERT INTO produtosNotas (codNota, codProduto, qtdVendida) VALUES (?, ?, ?)";
+        String sqlItem = "INSERT INTO produtosNotas (codNota, "
+                + "codProduto, qtdVendida) VALUES (?, ?, ?)";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sqlNF, 
@@ -76,7 +77,7 @@ public class NotaFiscalDAO {
             NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
                     rs.getInt("codCliente"), 
                     rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
-                    rs.getInt("subtotal"));
+                    rs.getInt("subtotal"), rs.getBoolean("status"));
             
             stmt = conn.prepareStatement(sqlItens);
             stmt.setInt(1, codNota);
@@ -88,13 +89,15 @@ public class NotaFiscalDAO {
                 ProdutoDAO pDAO = new ProdutoDAO();
                 Produto p = pDAO.getProduto(codProd);
                 
-                ProdutoNota pN = new ProdutoNota(codNota, p, rs.getInt("qtdVendida"));
+                ProdutoNota pN = new ProdutoNota(codNota, p, 
+                        rs.getInt("qtdVendida"));
                 n.addItem(pN);
             }
             
             return n;
         } catch(SQLException e) {
-            System.out.println("Erro ao encontrar NotaFiscal: " + e.getMessage());
+            System.out.println("Erro ao encontrar NotaFiscal: " 
+                    + e.getMessage());
             return null;
         }
     }
@@ -111,7 +114,7 @@ public class NotaFiscalDAO {
                 NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
                     rs.getInt("codCliente"), 
                     rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
-                    rs.getInt("subtotal"));
+                    rs.getInt("subtotal"), rs.getBoolean("status"));
                  notasFiscais.add(n);
                  notaFiscalMap.put(n.getCodNota(), n);
             }
@@ -121,13 +124,14 @@ public class NotaFiscalDAO {
                     Collections.nCopies(notaFiscalMap.size(), "?"));
             sql += placeholders + ")";
             
+            stmt = conn.prepareStatement(sql);
+             
             int index = 1;
             for (Integer codNota : notaFiscalMap.keySet()) {
                stmt.setInt(index, codNota);
                index++;
             }
-            
-            stmt = conn.prepareStatement(sql);
+       
             rs = stmt.executeQuery();
             
             while(rs.next()){
@@ -135,7 +139,8 @@ public class NotaFiscalDAO {
                 if(nt != null){
                     ProdutoDAO pDAO = new ProdutoDAO();
                     Produto p = pDAO.getProduto(rs.getInt("codProduto"));
-                    ProdutoNota item = new ProdutoNota(nt.getCodNota(),p, rs.getInt("qtdVendida"));
+                    ProdutoNota item = new ProdutoNota(nt.getCodNota(),p, 
+                            rs.getInt("qtdVendida"));
                     nt.addItem(item);
                 }
             }
@@ -146,9 +151,22 @@ public class NotaFiscalDAO {
         return notasFiscais;
     }
     
+    public void cancelarNotaFiscal(int codNotaFiscal){
+        String sql = "UPDATE notasfiscais set status = 0 where codNota = ?";
+        try{
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, codNotaFiscal);
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex){
+            System.out.println("Erro ao cancelar nota fiscal: " + ex.getMessage());
+        }
+    }
+    
     public void excluirProdutodeNota(int codNotaFiscal, int codProduto){
         try{
-            String sql = "DELETE FROM produtosnotas WHERE codNota = ? and codProduto = ?";
+            String sql = "DELETE FROM produtosnotas WHERE codNota = ? "
+                    + "and codProduto = ?";
             PreparedStatement stmt = this.conn.prepareStatement(sql);
             stmt.setInt(1, codNotaFiscal);
             stmt.setInt(2, codProduto);
