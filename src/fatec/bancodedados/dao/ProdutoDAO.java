@@ -1,5 +1,6 @@
 package fatec.bancodedados.dao;
 
+import fatec.bancodedados.dto.ProdutoMaisVendido;
 import fatec.bancodedados.util.Conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import fatec.bancodedados.model.Produto;
 import java.sql.Statement;
+import java.util.Collections;
 
 /**
  *
@@ -71,6 +73,36 @@ public class ProdutoDAO {
             System.out.println("Erro ao encontrar produto: " + e.getMessage());
             return null;
         }
+    }
+    
+    public List<ProdutoMaisVendido> getProdutosMaisVendidos(){
+        String sql = "SELECT p.nome, p.precoVenda, COUNT(pn.codProduto) as QuantidadeVendida " 
+                + "FROM produtos p " 
+                + "JOIN produtosnotas pn " 
+                + "ON pn.codProduto = p.codProduto " 
+                + "GROUP BY p.nome, p.precoVenda " 
+                + "ORDER BY QuantidadeVendida DESC";
+        
+        List<ProdutoMaisVendido> produtosMaisVendidos = new ArrayList<>();
+        
+        try{
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                ProdutoMaisVendido pmv = new ProdutoMaisVendido(
+                    rs.getString("nome"),
+                    rs.getDouble("precoVenda"),
+                    rs.getInt("QuantidadeVendida")
+                );
+                produtosMaisVendidos.add(pmv);
+            }
+        }catch(SQLException ex){
+            System.out.println("Erro ao buscar produtos mais vendidos: : " 
+                    + ex.getMessage());
+            return Collections.emptyList();
+        }
+        return produtosMaisVendidos;
     }
     
     public void editar(Produto produto){

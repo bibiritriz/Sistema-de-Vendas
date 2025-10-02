@@ -1,5 +1,19 @@
 package fatec.bancodedados.view;
 
+import fatec.bancodedados.util.GeradorDeRelatorios;
+import java.awt.GridLayout;
+import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+
 /**
  *
  * @author Beatriz Camargo
@@ -24,24 +38,63 @@ public class GerarRelatorio extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        ProdutosMaisVendidosBotao = new javax.swing.JButton();
+        NotaFiscalDataB = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gerar Relatórios");
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Gerar Relatórios");
+
+        jButton1.setText("Relatório de Compras");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        ProdutosMaisVendidosBotao.setText("Produtos mais vendidos");
+        ProdutosMaisVendidosBotao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ProdutosMaisVendidosBotaoActionPerformed(evt);
+            }
+        });
+
+        NotaFiscalDataB.setText("NotaFiscalData");
+        NotaFiscalDataB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NotaFiscalDataBActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(NotaFiscalDataB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(ProdutosMaisVendidosBotao)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(0, 272, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(ProdutosMaisVendidosBotao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(NotaFiscalDataB)
+                .addGap(0, 209, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -57,6 +110,69 @@ public class GerarRelatorio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            new GeradorDeRelatorios().gerarHistoricoCompleto();
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro Relatório", JOptionPane.ERROR_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(this, "Relatório gerado com sucesso", "Relatório", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void ProdutosMaisVendidosBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdutosMaisVendidosBotaoActionPerformed
+        try {
+            new GeradorDeRelatorios().gerarRelatorioProdutosMaisVendidos();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro Relatório", JOptionPane.ERROR_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(this, "Relatório gerado com sucesso", "Relatório", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_ProdutosMaisVendidosBotaoActionPerformed
+
+    private void NotaFiscalDataBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotaFiscalDataBActionPerformed
+        try {
+            // Criando spinners para data/hora inicial e final
+            SpinnerDateModel modelInicio = new SpinnerDateModel();
+            JSpinner spinnerInicio = new JSpinner(modelInicio);
+            spinnerInicio.setEditor(new JSpinner.DateEditor(spinnerInicio, "dd/MM/yyyy HH:mm"));
+
+            SpinnerDateModel modelFim = new SpinnerDateModel();
+            JSpinner spinnerFim = new JSpinner(modelFim);
+            spinnerFim.setEditor(new JSpinner.DateEditor(spinnerFim, "dd/MM/yyyy HH:mm"));
+
+            // Painel para exibir os dois spinners no JOptionPane
+            JPanel panel = new JPanel(new GridLayout(2, 2, 5, 5));
+            panel.add(new JLabel("Data e hora inicial:"));
+            panel.add(spinnerInicio);
+            panel.add(new JLabel("Data e hora final:"));
+            panel.add(spinnerFim);
+
+            int result = JOptionPane.showConfirmDialog(
+                    null, panel, 
+                    "Selecione intervalo de datas", 
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (result == JOptionPane.OK_OPTION) {
+                Date dataInicio = (Date) spinnerInicio.getValue();
+                Date dataFim = (Date) spinnerFim.getValue();
+
+                // Converte para LocalDateTime
+                LocalDateTime inicio = dataInicio.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+                LocalDateTime fim = dataFim.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+                // Chama seu relatório
+                new GeradorDeRelatorios().gerarRelatorioVendasPorPeriodo(inicio, fim);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro Relatório", JOptionPane.ERROR_MESSAGE);
+        }
+        JOptionPane.showMessageDialog(this, "Relatório gerado com sucesso", "Relatório", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_NotaFiscalDataBActionPerformed
 
     /**
      * @param args the command line arguments
@@ -94,6 +210,9 @@ public class GerarRelatorio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton NotaFiscalDataB;
+    private javax.swing.JButton ProdutosMaisVendidosBotao;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
