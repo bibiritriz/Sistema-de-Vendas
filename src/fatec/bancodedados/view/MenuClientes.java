@@ -15,6 +15,11 @@ import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.Endereco;
 import static fatec.bancodedados.service.viaCEPService.buscarEnderecoPorCep;
+import fatec.bancodedados.util.CustomFilter;
+import static fatec.bancodedados.util.CustomFilter.isCPFValido;
+import static fatec.bancodedados.util.CustomFilter.isEmailValido;
+import java.sql.SQLException;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -27,7 +32,7 @@ public class MenuClientes extends javax.swing.JFrame {
         initComponents();
         tblClienteModel = (DefaultTableModel) ClienteTable.getModel();
         carregarClientes();
-        CodigoGroupInput.setVisible(false);
+        definirValidacoes();
     }
     
 
@@ -54,7 +59,7 @@ public class MenuClientes extends javax.swing.JFrame {
         EmailLabel = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         CodigoGroupInput = new javax.swing.JPanel();
-        CodInput = new javax.swing.JTextField();
+        CpfInput = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         BotaoBuscarCEP = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -70,11 +75,14 @@ public class MenuClientes extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         NumeroInput = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ClienteTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gerenciamento de Clientes");
 
+        criarBotao.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         criarBotao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/add.png"))); // NOI18N
         criarBotao.setText("Salvar");
         criarBotao.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +91,8 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
+        BotaoLimpar.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+        BotaoLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/clean.png"))); // NOI18N
         BotaoLimpar.setText("Limpar");
         BotaoLimpar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +100,7 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
+        ExcluirButton.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         ExcluirButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/delete.png"))); // NOI18N
         ExcluirButton.setText("Excluir");
         ExcluirButton.addActionListener(new java.awt.event.ActionListener() {
@@ -98,6 +109,7 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
+        BotaoEditar.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         BotaoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/pencil.png"))); // NOI18N
         BotaoEditar.setText("Editar");
         BotaoEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -106,17 +118,32 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
+        FormulárioCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Novo Cliente"));
+
+        TelefoneInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel1.setText("Nome ");
 
+        NomeField.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel3.setText("Cep");
 
+        CEPLabel.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel4.setText("Email");
 
+        EmailLabel.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel5.setText("Telefone");
 
-        CodInput.setEnabled(false);
+        CpfInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
 
-        jLabel6.setText("Código ");
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+        jLabel6.setText("Cpf");
 
         javax.swing.GroupLayout CodigoGroupInputLayout = new javax.swing.GroupLayout(CodigoGroupInput);
         CodigoGroupInput.setLayout(CodigoGroupInputLayout);
@@ -127,8 +154,8 @@ public class MenuClientes extends javax.swing.JFrame {
                 .addGroup(CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CodigoGroupInputLayout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(0, 124, Short.MAX_VALUE))
-                    .addComponent(CodInput, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                        .addGap(0, 143, Short.MAX_VALUE))
+                    .addComponent(CpfInput, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
                 .addContainerGap())
         );
         CodigoGroupInputLayout.setVerticalGroup(
@@ -137,9 +164,10 @@ public class MenuClientes extends javax.swing.JFrame {
                 .addContainerGap(14, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CodInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(CpfInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        BotaoBuscarCEP.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         BotaoBuscarCEP.setText("Buscar");
         BotaoBuscarCEP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,31 +175,44 @@ public class MenuClientes extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel7.setText("Logradouro: ");
 
+        LogradouroInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         LogradouroInput.setEnabled(false);
 
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel8.setText("Bairro:");
 
+        BairroInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         BairroInput.setEnabled(false);
 
+        jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel9.setText("UF");
 
+        UfInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         UfInput.setEnabled(false);
 
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel10.setText("Cidade");
 
+        CidadeInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         CidadeInput.setEnabled(false);
 
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel11.setText("Complemento");
 
+        ComplementoInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         ComplementoInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComplementoInputActionPerformed(evt);
             }
         });
 
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel12.setText("Número");
+
+        NumeroInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
 
         javax.swing.GroupLayout FormulárioClienteLayout = new javax.swing.GroupLayout(FormulárioCliente);
         FormulárioCliente.setLayout(FormulárioClienteLayout);
@@ -180,14 +221,6 @@ public class MenuClientes extends javax.swing.JFrame {
             .addGroup(FormulárioClienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(TelefoneInput, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)))
                     .addGroup(FormulárioClienteLayout.createSequentialGroup()
                         .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(BairroInput, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -203,15 +236,6 @@ public class MenuClientes extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(CidadeInput))))
                     .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel12)
-                        .addContainerGap())
-                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                        .addComponent(LogradouroInput, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(NumeroInput))
-                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
                         .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addGroup(FormulárioClienteLayout.createSequentialGroup()
@@ -223,19 +247,37 @@ public class MenuClientes extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(ComplementoInput, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LogradouroInput, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(18, 18, 18)
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addContainerGap())
+                            .addComponent(NumeroInput)))))
         );
         FormulárioClienteLayout.setVerticalGroup(
             FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FormulárioClienteLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(1, 1, 1)
                 .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 12, Short.MAX_VALUE)
                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FormulárioClienteLayout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -273,22 +315,27 @@ public class MenuClientes extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ComplementoInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/userIcon.png"))); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/userIcon.png"))); // NOI18N
         jLabel2.setText("Gerenciamento de Clientes");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Clientes", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        ClienteTable.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         ClienteTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Cod", "Nome", "CEP", "Email", "Telefone"
+                "Cpf", "Nome", "CEP", "Email", "Telefone"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -312,48 +359,63 @@ public class MenuClientes extends javax.swing.JFrame {
             ClienteTable.getColumnModel().getColumn(4).setResizable(false);
         }
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FormulárioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(criarBotao)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ExcluirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BotaoEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(BotaoLimpar))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2))
-                .addContainerGap(42, Short.MAX_VALUE))
+                        .addComponent(FormulárioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(criarBotao)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ExcluirButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BotaoEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(BotaoLimpar)
+                .addGap(109, 109, 109))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(FormulárioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(FormulárioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(criarBotao)
-                            .addComponent(ExcluirButton)
-                            .addComponent(BotaoEditar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BotaoLimpar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(criarBotao)
+                    .addComponent(ExcluirButton)
+                    .addComponent(BotaoEditar)
+                    .addComponent(BotaoLimpar))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
+
+        FormulárioCliente.getAccessibleContext().setAccessibleName("Novo Cliente");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -363,29 +425,64 @@ public class MenuClientes extends javax.swing.JFrame {
         String email = EmailLabel.getText().trim();
         String telefone = TelefoneInput.getText().trim();
         String cep = CEPLabel.getText().trim();
+        String logradouro = LogradouroInput.getText().trim();
+        String cpf = CpfInput.getText().trim();
+        boolean emailValido = isEmailValido(email);
+        boolean cpfValido = isCPFValido(cpf);
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cep.isEmpty() || cpf.isEmpty()) {
             JOptionPane.showMessageDialog(
                 this,
-                "Os campos Nome, Email e Telefone são obrigatórios.",
+                "Os campos Cpf,Nome, Email, Telefone e CEP são obrigatórios.",
                 "Erro de Validação",
                 JOptionPane.ERROR_MESSAGE 
             );
             return;
         }
-        if(CodigoGroupInput.isVisible()){
+        if(!emailValido){
+            JOptionPane.showMessageDialog(
+                this,
+                "Email em um formato inválido.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(!cpfValido){
+            JOptionPane.showMessageDialog(
+                this,
+                "Cpf inválido.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(logradouro.isEmpty()){
+            JOptionPane.showMessageDialog(
+                this,
+                "Você precisa buscar por seu CEP.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(!CpfInput.isEnabled()){
             //Editar
             Cliente cl = new Cliente();
-            cl.setCod(Integer.parseInt(CodInput.getText()));
+            cl.setCpf(CpfInput.getText());
             cl.setEmail(email);
             cl.setNome(nome);
             cl.setTelefone(telefone);
             
+            System.out.println("NomeField: " + NomeField);
+            System.out.println("EmailLabel: " + EmailLabel);
+            System.out.println("CpfInput: " + CpfInput);
+
             
             EnderecoDAO endDAO = new EnderecoDAO();
             
-            Endereco end = endDAO.buscarEnderecoPorCodCliente(cl.getCod());
-            
+            Endereco end = endDAO.buscarEnderecoPorCpfCliente(cl.getCpf());
+            System.out.println("end: " + end);
             end.setLogradouro(LogradouroInput.getText());
             end.setNumCasa(NumeroInput.getText());
             end.setBairro(BairroInput.getText());
@@ -416,9 +513,22 @@ public class MenuClientes extends javax.swing.JFrame {
             EnderecoDAO clEndDAO = new EnderecoDAO();
             //Inserir endereco deve retronar o ID;
             int codEndereco = clEndDAO.inserir(clEnd);
-            Cliente cl = new Cliente(nome,codEndereco,email,telefone);
+            Cliente cl = new Cliente(nome,codEndereco,email,telefone, cpf);
             ClienteDAO clDAO = new ClienteDAO();
-            clDAO.inserir(cl);
+            try {
+                clDAO.inserir(cl);
+            } catch (SQLException ex) {
+                if (ex.getSQLState().equals("23000")) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Erro!! Email já cadastrado.",
+                        "Erro de Validação",
+                        JOptionPane.ERROR_MESSAGE 
+                    );
+                } else {
+                    ex.printStackTrace(); // outros erros
+                }
+            }
             carregarClientes();        
         }
         limparFormulario();
@@ -431,12 +541,12 @@ public class MenuClientes extends javax.swing.JFrame {
                 ClienteDAO clDAO = new ClienteDAO();
                 EnderecoDAO endDAO = new EnderecoDAO();
                 int linha = ClienteTable.getSelectedRow();
-                int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
-                Endereco clEndereco = endDAO.buscarEnderecoPorCodCliente(cod);
+                String cpfCliente = ClienteTable.getValueAt(linha, 0).toString();
+                Endereco clEndereco = endDAO.buscarEnderecoPorCpfCliente(cpfCliente);
                 if(clEndereco == null){
                     JOptionPane.showMessageDialog(this, "Endereço do cliente não encontrado.");
                 } else {
-                    clDAO.excluir(cod);
+                    clDAO.excluir(cpfCliente);
                     endDAO.excluir(clEndereco.getCodEndereco());
                     tblClienteModel.removeRow(ClienteTable.getSelectedRow());
                 }
@@ -456,13 +566,14 @@ public class MenuClientes extends javax.swing.JFrame {
     private void BotaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoEditarActionPerformed
         if (ClienteTable.getSelectedRowCount() == 1) {
             int linha = ClienteTable.getSelectedRow();
-            int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
+            String cpfCliente = ClienteTable.getValueAt(linha, 0).toString();
             CodigoGroupInput.setVisible(true);
-            CodInput.setText(String.valueOf(cod));
+            CpfInput.setText(String.valueOf(cpfCliente));
+            CpfInput.setEnabled(false);
             
             //Pegar Endereco por cod cliente
             EnderecoDAO endDAO = new EnderecoDAO();
-            Endereco endCl = endDAO.buscarEnderecoPorCodCliente(cod);
+            Endereco endCl = endDAO.buscarEnderecoPorCpfCliente(cpfCliente);
 
             NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
             EmailLabel.setText(ClienteTable.getValueAt(linha, 3).toString());
@@ -541,9 +652,9 @@ public class MenuClientes extends javax.swing.JFrame {
         tblClienteModel.setRowCount(0);
         for (Cliente c : clientes) {
             EnderecoDAO endDAO = new EnderecoDAO();
-            Endereco clEnd = endDAO.buscarEnderecoPorCodCliente(c.getCod());
+            Endereco clEnd = endDAO.buscarEnderecoPorCpfCliente(c.getCpf());
             tblClienteModel.addRow(new Object[]{
-                c.getCod(),
+                c.getCpf(),
                 c.getNome(),
                 clEnd.getCep(),
                 c.getEmail(),
@@ -557,7 +668,7 @@ public class MenuClientes extends javax.swing.JFrame {
            int linha = ClienteTable.getSelectedRow();
            int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
            CodigoGroupInput.setVisible(true);
-           CodInput.setText(String.valueOf(cod));
+           CpfInput.setText(String.valueOf(cod));
 
            NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
            CEPLabel.setText(ClienteTable.getValueAt(linha, 2).toString());
@@ -572,7 +683,6 @@ public class MenuClientes extends javax.swing.JFrame {
     }
     
     private void limparFormulario(){
-        CodigoGroupInput.setVisible(false);
         EmailLabel.setText("");
         NomeField.setText("");
         TelefoneInput.setText("");
@@ -583,6 +693,8 @@ public class MenuClientes extends javax.swing.JFrame {
         UfInput.setText("");
         CidadeInput.setText("");
         ComplementoInput.setText("");
+        CpfInput.setText("");
+        CpfInput.setEnabled(true);
     }
     
     private void preencherEndereco(Endereco end){
@@ -594,6 +706,19 @@ public class MenuClientes extends javax.swing.JFrame {
         NumeroInput.setText(end.getNumCasa());
     }
     
+    private void definirValidacoes(){
+        ((AbstractDocument) CEPLabel.getDocument())
+                .setDocumentFilter(new CustomFilter(8, CustomFilter.Tipo.NUMEROS));
+        ((AbstractDocument) TelefoneInput.getDocument())
+                .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.NUMEROS));
+        ((AbstractDocument) NomeField.getDocument())
+                .setDocumentFilter(new CustomFilter(100, CustomFilter.Tipo.LETRAS));
+        ((AbstractDocument) CpfInput.getDocument())
+        .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.ALFANUMERICO));
+    }
+    
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BairroInput;
@@ -603,9 +728,9 @@ public class MenuClientes extends javax.swing.JFrame {
     private javax.swing.JTextField CEPLabel;
     private javax.swing.JTextField CidadeInput;
     private javax.swing.JTable ClienteTable;
-    private javax.swing.JTextField CodInput;
     private javax.swing.JPanel CodigoGroupInput;
     private javax.swing.JTextField ComplementoInput;
+    private javax.swing.JTextField CpfInput;
     private javax.swing.JTextField EmailLabel;
     private javax.swing.JButton ExcluirButton;
     private javax.swing.JPanel FormulárioCliente;
@@ -627,6 +752,7 @@ public class MenuClientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 

@@ -14,6 +14,7 @@ import fatec.bancodedados.model.NotaFiscal;
 import fatec.bancodedados.model.Produto;
 import fatec.bancodedados.model.ProdutoNota;
 import java.util.List;
+import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -56,7 +57,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         TBL_Clientes = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         NomeUsuarioLabel = new javax.swing.JLabel();
-        CodClienteInput = new javax.swing.JTextField();
+        CpfClienteInput = new javax.swing.JTextField();
         SelecionarClienteBotao = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         ListaProdutos = new javax.swing.JList<>();
@@ -141,9 +142,9 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("Notas Fiscais");
 
-        NomeUsuarioLabel.setText("Código Cliente");
+        NomeUsuarioLabel.setText("Cpf Cliente");
 
-        CodClienteInput.setEnabled(false);
+        CpfClienteInput.setEnabled(false);
 
         SelecionarClienteBotao.setText("Selecionar");
         SelecionarClienteBotao.addActionListener(new java.awt.event.ActionListener() {
@@ -256,7 +257,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(NomeUsuarioLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(CpfClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(SelecionarClienteBotao))
                                     .addGroup(layout.createSequentialGroup()
@@ -285,7 +286,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
                 .addComponent(NomeUsuarioLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CodClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CpfClienteInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SelecionarClienteBotao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
@@ -320,7 +321,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
        if (TBL_Clientes.getSelectedRowCount() == 1) {
        int linha = TBL_Clientes.getSelectedRow();
        String cod = TBL_Clientes.getValueAt(linha, 0).toString();
-       CodClienteInput.setText(cod);
+       CpfClienteInput.setText(cod);
        } else if (TBL_Clientes.getRowCount() == 0) {
            JOptionPane.showMessageDialog(this, "Tabela vazia.");
        } else {
@@ -358,7 +359,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
 
     private void NovaNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovaNotaBotaoActionPerformed
         NotaFiscal nf = new NotaFiscal();
-        nf.setCodCliente(Integer.parseInt(CodClienteInput.getText()));
+        nf.setCpfCliente(CpfClienteInput.getText());
 
         for(int i = 0; i < listaProdutosModel.size(); i++){
             String[] dados = listaProdutosModel.get(i).split(";");
@@ -427,7 +428,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField CodClienteInput;
+    private javax.swing.JTextField CpfClienteInput;
     private javax.swing.JButton LimparButton;
     private javax.swing.JList<String> ListaProdutos;
     private javax.swing.JLabel NomeUsuarioLabel;
@@ -476,7 +477,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
         tblClienteModel.setRowCount(0);
         for(Cliente cl : clientes){
             tblClienteModel.addRow(new Object[]{
-                cl.getCod(),
+                cl.getCpf(),
                 cl.getNome(),
                 cl.getEmail(),
                 cl.getTelefone()
@@ -491,7 +492,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
             //TODO: Implementar condição de: 'nf.getStatus() != 'Cancelado'', para filtrar as notas fiscais
             tblNotasAnterioresModel.addRow(new Object[]{
                 nf.getCodNota(),
-                nf.getCodCliente(),
+                nf.getCpfCliente(),
                 nf.getQtdTotal(),
                 nf.getSubTotal(),
                 nf.getDataVenda(),
@@ -501,7 +502,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
     }
     
     private void limpar(){
-        CodClienteInput.setText("");
+        CpfClienteInput.setText("");
         listaProdutosModel.setSize(0);
     }
 

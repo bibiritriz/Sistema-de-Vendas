@@ -96,7 +96,7 @@ public class GeradorDeRelatorios {
                 .setWidth(UnitValue.createPercentValue(100))
                 .setMarginBottom(5f);
         
-        Cliente cl = new ClienteDAO().getCliente(nf.getCodCliente());
+        Cliente cl = new ClienteDAO().getCliente(nf.getCpfCliente());
 
         infoTable.addCell(createBorderlessCell("Cliente\n" + cl.getNome()));
         infoTable.addCell(createBorderlessCell("Data Compra\n" + nf.getDataVenda()));

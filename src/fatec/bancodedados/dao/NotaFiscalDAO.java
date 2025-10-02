@@ -31,7 +31,7 @@ public class NotaFiscalDAO {
     }
     
     public NotaFiscal inserir(NotaFiscal notaFiscal){
-        String sqlNF = "INSERT INTO notasfiscais (codCliente) values (?)";
+        String sqlNF = "INSERT INTO notasfiscais (cpfCliente) values (?)";
         String sqlItem = "INSERT INTO produtosNotas (codNota, "
                 + "codProduto, qtdVendida) VALUES (?, ?, ?)";
         
@@ -81,7 +81,7 @@ public class NotaFiscalDAO {
                 ProdutoNota pn = new ProdutoNota(rs.getInt("codNota"), p, rs.getInt("qtdVendida"));
                 if(!mapNotaFiscal.containsKey(rs.getInt("codNota"))){
                     ClienteDAO cDAO = new ClienteDAO();
-                    Cliente c = cDAO.getCliente(rs.getInt("codCliente"));
+                    Cliente c = cDAO.getCliente(rs.getString("cpfCliente"));
                     NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
                     c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
@@ -117,7 +117,7 @@ public class NotaFiscalDAO {
             NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
                     c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
-            
+
             stmt = conn.prepareStatement(sqlItens);
             stmt.setInt(1, codNota);
             
@@ -153,8 +153,8 @@ public class NotaFiscalDAO {
                 ClienteDAO cDAO = new ClienteDAO();
                 Cliente c = cDAO.getCliente(rs.getString("cpfCliente"));
                 NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
-                    c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
-                    rs.getInt("subtotal"), rs.getBoolean("status"));
+                c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
+                rs.getInt("subtotal"), rs.getBoolean("status"));
                  notasFiscais.add(n);
                  notaFiscalMap.put(n.getCodNota(), n);
             }
