@@ -20,7 +20,7 @@ public class ClienteDAO {
     
     public void inserir(Cliente cl){
         try {
-            String sql = "INSERT INTO clientes (cpf, nome, codEndereco, email, telefone) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO clientes (cpfCliente, nome, codEndereco, email, telefone) VALUES (?,?,?,?,?)";
             PreparedStatement stmt = this.conn.prepareStatement(sql);
             stmt.setString(1, cl.getCpf());
             stmt.setString(2, cl.getNome());
@@ -35,12 +35,12 @@ public class ClienteDAO {
     
     public Cliente getCliente(String cpf){
         try {
-        String sql = "SELECT * FROM clientes WHERE cpf = ?";     
+        String sql = "SELECT * FROM clientes WHERE cpfCliente = ?";     
             PreparedStatement stmt = this.conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             stmt.setString(1, cpf);
             ResultSet rs = stmt.executeQuery();
             rs.first();
-            Cliente cl = new Cliente(rs.getString("nome"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpf"));
+            Cliente cl = new Cliente(rs.getString("nome"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"));
             return cl;
         } catch (SQLException ex) {
             System.out.println("Erro ao buscar cliente: " + ex.getMessage());
@@ -61,7 +61,7 @@ public class ClienteDAO {
                     rs.getInt("codEndereco"),
                     rs.getString("email"),
                     rs.getString("telefone"),
-                    rs.getString("cpf")
+                    rs.getString("cpfCliente")
                 );
                 lista.add(cl);
             }
@@ -74,7 +74,7 @@ public class ClienteDAO {
     
     public void editar(Cliente cl){
         try {
-            String sql = "UPDATE clientes set nome=?, codEndereco=?, email=?, telefone=? WHERE cpf=?";
+            String sql = "UPDATE clientes set nome=?, codEndereco=?, email=?, telefone=? WHERE cpfCliente=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, cl.getNome());
             stmt.setInt(2, cl.getCodEndereco());
@@ -89,7 +89,7 @@ public class ClienteDAO {
     
     public void excluir(String cpf){
         try{
-            String sql = "DELETE FROM clientes WHERE cpf=?";
+            String sql = "DELETE FROM clientes WHERE cpfCliente=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, cpf);
             stmt.execute();

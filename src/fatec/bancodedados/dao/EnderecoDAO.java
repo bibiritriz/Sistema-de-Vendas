@@ -48,11 +48,11 @@ public class EnderecoDAO {
         }
     }
     
-    public Endereco buscarEnderecoPorCodCliente(int codCliente){
+    public Endereco buscarEnderecoPorCpfCliente(String cpfCliente){
         try{
-            String sql = "Select codEndereco from clientes  where codCliente = ?";
+            String sql = "Select codEndereco from clientes  where cpfCliente = ?";
             PreparedStatement stmt = this.conn.prepareStatement(sql);
-            stmt.setInt(1, codCliente);
+            stmt.setString(1, cpfCliente);
             ResultSet rs = stmt.executeQuery();
             int codEndereco = 0;
             
