@@ -1,5 +1,6 @@
 package fatec.bancodedados.util;
 
+import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -9,142 +10,229 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Tab;
-import com.itextpdf.layout.element.TabStop;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TabAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import fatec.bancodedados.dao.ClienteDAO;
 import fatec.bancodedados.dao.NotaFiscalDAO;
-import fatec.bancodedados.model.Cliente;
+import fatec.bancodedados.dao.ProdutoDAO;
+import fatec.bancodedados.dto.ProdutoMaisVendido;
 import fatec.bancodedados.model.NotaFiscal;
-import fatec.bancodedados.model.Produto;
 import fatec.bancodedados.model.ProdutoNota;
-import java.io.FileNotFoundException;
 
+import java.io.FileNotFoundException;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class GeradorDeRelatorios {
 
-    private static final DeviceRgb VERDE_CLARO = new DeviceRgb(229, 245, 228);
+    // =================================================================================
+    // 1. ESTILOS E CONSTANTES PADRONIZADOS
+    // =================================================================================
     private static final String TITULO_PRINCIPAL = "SISTEMA DE VENDAS";
-    
-    public void gerarHistoricoCompras(List<NotaFiscal> nfs) throws FileNotFoundException{
-        String path = "src/fatec/bancodedados/invoice/historicoCompras.pdf";
+    private static final Color COR_PRINCIPAL_TEXTO = new DeviceRgb(204, 102, 51); // Laranja escuro
+    private static final Color COR_HEADER_TABELA = new DeviceRgb(252, 227, 214);   // Laranja claro
+    private static final Color COR_BORDA_TABELA = new DeviceRgb(204, 204, 204);   // Cinza
+
+    private final DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+    // =================================================================================
+    // 2. MÉTODOS PÚBLICOS (PONTOS DE ENTRADA)
+    // =================================================================================
+
+    public void gerarHistoricoCompleto() throws FileNotFoundException {
+        List<NotaFiscal> nfs = new NotaFiscalDAO().getNotaFiscais();
+        String path = "src/fatec/bancodedados/invoice/historicoCompleto.pdf";
+        Document document = iniciarDocumentoPdf(path);
+
+        adicionarCabecalho(document, "Histórico de Compras", null);
+
+        for (NotaFiscal nf : nfs) {
+            adicionarBlocoNotaFiscal(document, nf);
+        }
+
+        document.close();
+        System.out.println("Relatório de histórico gerado em: " + path);
+    }
+
+    public void gerarRelatorioVendasPorPeriodo(LocalDateTime inicio, LocalDateTime fim) throws FileNotFoundException {
+        List<NotaFiscal> nfs = new NotaFiscalDAO().getNotaFicaisPorData(inicio, fim);
+        String path = "src/fatec/bancodedados/invoice/relatorioVendasPeriodo.pdf";
+        Document document = iniciarDocumentoPdf(path);
+
+        String periodo = String.format("De: %s até %s", inicio.format(formatadorData), fim.format(formatadorData));
+        adicionarCabecalho(document, "Relatório de Vendas por Período", periodo);
+
+        for (NotaFiscal nf : nfs) {
+            adicionarBlocoNotaFiscal(document, nf);
+        }
+
+        document.close();
+        System.out.println("Relatório de vendas por período gerado em: " + path);
+    }
+
+    public void gerarRelatorioProdutosMaisVendidos() throws FileNotFoundException {
+        List<ProdutoMaisVendido> produtos = new ProdutoDAO().getProdutosMaisVendidos();
+        String path = "src/fatec/bancodedados/invoice/produtosMaisVendidos.pdf";
+        Document document = iniciarDocumentoPdf(path);
+        
+        adicionarCabecalho(document, "Produtos Mais Vendidos", null);
+        
+        Table tabela = new Table(UnitValue.createPercentArray(new float[]{50f, 25f, 25f}))
+                .setWidth(UnitValue.createPercentValue(100));
+
+        // Cabeçalho
+        tabela.addHeaderCell(criarCelulaCabecalho("Produto"));
+        tabela.addHeaderCell(criarCelulaCabecalho("Valor Unitário"));
+        tabela.addHeaderCell(criarCelulaCabecalho("Quantidade Vendida"));
+
+        int totalVendido = 0;
+        for (ProdutoMaisVendido pmv : produtos) {
+            tabela.addCell(criarCelulaDados(pmv.getNome(), TextAlignment.LEFT));
+            tabela.addCell(criarCelulaDados(formatadorMoeda.format(pmv.getPrecoVenda()), TextAlignment.CENTER));
+            tabela.addCell(criarCelulaDados(String.valueOf(pmv.getQuantidadeVendida()), TextAlignment.CENTER));
+            totalVendido += pmv.getQuantidadeVendida();
+        }
+        
+        // Rodapé com o total
+        tabela.addCell(new Cell(1, 2)
+            .add(new Paragraph("Total de Itens Vendidos").setBold())
+            .setTextAlignment(TextAlignment.RIGHT)
+            .setBorder(Border.NO_BORDER));
+        tabela.addCell(criarCelulaDados(String.valueOf(totalVendido), TextAlignment.CENTER).setBold());
+
+        document.add(tabela);
+        document.close();
+        System.out.println("Relatório de produtos mais vendidos gerado em: " + path);
+    }
+
+
+    // =================================================================================
+    // 3. MÉTODOS AUXILIARES ESTRUTURAIS (REUTILIZADOS)
+    // =================================================================================
+
+    private Document iniciarDocumentoPdf(String path) throws FileNotFoundException {
         PdfWriter pdfWriter = new PdfWriter(path);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);
-        Document document = new Document(pdfDocument);
+        return new Document(pdfDocument);
+    }
 
-        adicionarCabecalhoPrincipal(document);
-        adicionarSubcabecalho(document, "Histórico de compras por cliente");
-        
-        for(NotaFiscal nf : nfs){
-            gerarBlocoNotaFiscal(document, nf);
-        }
-        
-        document.close();
-        System.out.println("PDF gerado com sucesso em: " + path);
-    }
-    
-    public void gerarPdfProdutosMaisVendidos(){
-        String path = "src/fatec/bancodedados/invoice/produtosMaisVendidos.pdf";
-    }
-    
-    private void adicionarSubcabecalho(Document document, String subtitulo) {
-        Paragraph header = new Paragraph()
-                .setFontSize(12)
-                .setMarginBottom(15f);
-        header.addTabStops(new TabStop(520, TabAlignment.RIGHT));
-        header.add(subtitulo);
-        header.add(new Tab());
-        header.add("Gerado em: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        document.add(header);
-    }
-    
-    private void adicionarCabecalhoPrincipal(Document document) {
+    private void adicionarCabecalho(Document document, String subtitulo, String periodo) {
+        // Título principal
         Paragraph titulo = new Paragraph(TITULO_PRINCIPAL)
-                .setFontSize(22)
-                .setBold()
-                .setBackgroundColor(VERDE_CLARO)
-                .setTextAlignment(TextAlignment.LEFT)
-                .setMarginBottom(10f)
-                .setPaddingTop(10f)
-                .setPaddingBottom(10f);
+                .setFontSize(26)
+                .setFontColor(COR_PRINCIPAL_TEXTO)
+                .setMarginBottom(5);
         document.add(titulo);
-    }
-        
-    private void gerarBlocoNotaFiscal(Document document, NotaFiscal nf) {
-        List<ProdutoNota> itens = nf.getItens();
-        
-        Table nfHeaderTable = new Table(UnitValue.createPercentArray(new float[]{100f}))
+
+        // Tabela para alinhar subtítulo e data
+        Table subcabecalho = new Table(UnitValue.createPercentArray(new float[]{70f, 30f}))
                 .setWidth(UnitValue.createPercentValue(100))
+                .setMarginBottom(20f);
+        
+        // Coluna da Esquerda (Subtítulo e Período)
+        Paragraph pEsquerda = new Paragraph(subtitulo).setBold();
+        if (periodo != null && !periodo.isEmpty()) {
+            pEsquerda.add("\n").add(periodo).setFontSize(10).setBold();
+        }
+        Cell cellEsquerda = new Cell().add(pEsquerda).setBorder(Border.NO_BORDER);
+        
+        // Coluna da Direita (Data de Geração)
+        String dataGeracao = "Gerado em: " + LocalDate.now().format(formatadorData);
+        Paragraph pDireita = new Paragraph(dataGeracao).setFontSize(10);
+        Cell cellDireita = new Cell().add(pDireita).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER);
+
+        subcabecalho.addCell(cellEsquerda);
+        subcabecalho.addCell(cellDireita);
+        document.add(subcabecalho);
+    }
+
+    private void adicionarBlocoNotaFiscal(Document document, NotaFiscal nf) {
+        // Tabela para o cabeçalho "Nota Fiscal: #X"
+        Table tabelaCabecalhoNF = new Table(UnitValue.createPercentArray(new float[]{100f}))
+                .setWidth(UnitValue.createPercentValue(100))
+                .setBackgroundColor(COR_HEADER_TABELA)
                 .setMarginTop(10f);
+        tabelaCabecalhoNF.addCell(
+                new Cell().add(new Paragraph("Nota Fiscal: #" + nf.getCodNota()).setBold())
+                        .setBorder(Border.NO_BORDER).setPadding(5)
+        );
+        document.add(tabelaCabecalhoNF);
 
-        Cell cellNfHeader = new Cell()
-                .add(new Paragraph("Nota Fiscal: #" + nf.getCodNota()).setBold())
-                .setBackgroundColor(VERDE_CLARO)
-                .setBorder(Border.NO_BORDER);
+        // Tabela para as informações do cliente
+        Table tabelaInfos = new Table(UnitValue.createPercentArray(new float[]{34f, 33f, 33f}))
+                .setWidth(UnitValue.createPercentValue(100));
+        tabelaInfos.addCell(criarCelulaInfo("Cliente\n" + nf.getCliente().getNome()));
+        tabelaInfos.addCell(criarCelulaInfo("Data Compra\n" + nf.getDataVenda()));
+        tabelaInfos.addCell(criarCelulaInfo("Total Itens\n" + nf.getQtdTotal()));
+        document.add(tabelaInfos);
 
-        nfHeaderTable.addCell(cellNfHeader);
-        document.add(nfHeaderTable);
-
-        Table infoTable = new Table(UnitValue.createPercentArray(new float[]{33f, 33f, 33f}))
-                .setWidth(UnitValue.createPercentValue(100))
-                .setMarginBottom(5f);
-        
-        Cliente cl = new ClienteDAO().getCliente(nf.getCpfCliente());
-
-        infoTable.addCell(createBorderlessCell("Cliente\n" + cl.getNome()));
-        infoTable.addCell(createBorderlessCell("Data Compra\n" + nf.getDataVenda()));
-        infoTable.addCell(createBorderlessCell("Quantidade Vendida\n" + nf.getQtdTotal()));
-
-        document.add(infoTable);
-        
-        Table produtosTable = criarTabelaProdutos(nf);
-        document.add(produtosTable);
+        // Tabela de produtos
+        document.add(criarTabelaProdutos(nf));
     }
-    
-    private Table criarTabelaProdutos(NotaFiscal nf) {
-        Table produtosTable = new Table(UnitValue.createPercentArray(new float[]{40f, 20f, 20f, 20f}))
-            .setWidth(UnitValue.createPercentValue(100))
-            .setMarginBottom(15f);
 
-        // Cabeçalhos da tabela de produtos
-        produtosTable.addHeaderCell("Produto");
-        produtosTable.addHeaderCell("Valor Unt.");
-        produtosTable.addHeaderCell("Quant. Vendida");
-        produtosTable.addHeaderCell("Valor Total");
-        
+    private Table criarTabelaProdutos(NotaFiscal nf) {
+        Table tabela = new Table(UnitValue.createPercentArray(new float[]{40f, 20f, 20f, 20f}))
+                .setWidth(UnitValue.createPercentValue(100))
+                .setMarginBottom(20f); // Espaço após cada bloco de nota fiscal
+
+        // Cabeçalhos
+        tabela.addHeaderCell("Produto");
+        tabela.addHeaderCell("Valor Unt.");
+        tabela.addHeaderCell("Qtd.");
+        tabela.addHeaderCell("Valor Total");
+
+        // Itens
         for (ProdutoNota item : nf.getItens()) {
-            Produto p = item.getProduto();
-            double total = p.getPrecoVenda() * item.getQtdVendida();
-            produtosTable.addCell(p.getNome());
-            produtosTable.addCell(Double.toString(p.getPrecoVenda()));
-            produtosTable.addCell(Integer.toString(item.getQtdVendida()));
-            produtosTable.addCell(Double.toString(total));
+            double valorTotalItem = item.getProduto().getPrecoVenda() * item.getQtdVendida();
+            tabela.addCell(criarCelulaDados(item.getProduto().getNome(), TextAlignment.LEFT));
+            tabela.addCell(criarCelulaDados(formatadorMoeda.format(item.getProduto().getPrecoVenda()), TextAlignment.RIGHT));
+            tabela.addCell(criarCelulaDados(String.valueOf(item.getQtdVendida()), TextAlignment.CENTER));
+            tabela.addCell(criarCelulaDados(formatadorMoeda.format(valorTotalItem), TextAlignment.RIGHT));
         }
 
-        // Subtotal
-        Cell subtotalLabelCell = new Cell(1, 3)
-                .add(new Paragraph("Subtotal").setTextAlignment(TextAlignment.RIGHT))
+        // Rodapé com o Subtotal
+        Cell cellLabelSubtotal = new Cell(1, 3)
+                .add(new Paragraph("Subtotal").setBold())
                 .setBorder(Border.NO_BORDER)
-                .setBorderTop(new SolidBorder(1));
-        Cell subtotalValueCell = new Cell()
-                .add(new Paragraph(Double.toString(nf.getSubTotal())))
+                .setTextAlignment(TextAlignment.RIGHT);
+        Cell cellValorSubtotal = new Cell()
+                .add(new Paragraph(formatadorMoeda.format(nf.getSubTotal())).setBold())
                 .setBorder(Border.NO_BORDER)
-                .setBorderTop(new SolidBorder(1));
+                .setTextAlignment(TextAlignment.RIGHT);
         
-        produtosTable.addCell(subtotalLabelCell);
-        produtosTable.addCell(subtotalValueCell);
+        tabela.addCell(cellLabelSubtotal);
+        tabela.addCell(cellValorSubtotal);
 
-        return produtosTable;
+        return tabela;
     }
 
-    private static Cell createBorderlessCell(String text) {
-        return new Cell().add(new Paragraph(text)).setBorder(Border.NO_BORDER);
+    // =================================================================================
+    // 4. MÉTODOS AUXILIARES DE CRIAÇÃO DE CÉLULAS (ESTILO)
+    // =================================================================================
+
+    private Cell criarCelulaCabecalho(String texto) {
+        return new Cell()
+                .add(new Paragraph(texto).setBold())
+                .setTextAlignment(TextAlignment.CENTER)
+                .setBackgroundColor(COR_HEADER_TABELA);
+    }
+
+    private Cell criarCelulaDados(String texto, TextAlignment alinhamento) {
+        return new Cell()
+                .add(new Paragraph(texto))
+                .setTextAlignment(alinhamento)
+                .setBorder(new SolidBorder(COR_BORDA_TABELA, 0.5f));
+    }
+
+    private Cell criarCelulaInfo(String texto) {
+        return new Cell()
+                .add(new Paragraph(texto).setFontSize(9))
+                .setBorder(new SolidBorder(COR_BORDA_TABELA, 0.5f));
     }
 }
