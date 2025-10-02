@@ -521,12 +521,15 @@ public class MenuClientes extends javax.swing.JFrame {
                 if (ex.getSQLState().equals("23000")) {
                     JOptionPane.showMessageDialog(
                         this,
-                        "Erro!! Email já cadastrado.",
+                        "Erro!! Emailou cpf já cadastrado.",
                         "Erro de Validação",
                         JOptionPane.ERROR_MESSAGE 
                     );
+                    System.out.println(ex.getMessage());
+                    return;
                 } else {
-                    ex.printStackTrace(); // outros erros
+                    ex.printStackTrace();
+                    return;
                 }
             }
             carregarClientes();        

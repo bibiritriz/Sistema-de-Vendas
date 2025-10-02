@@ -359,7 +359,8 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
 
     private void NovaNotaBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovaNotaBotaoActionPerformed
         NotaFiscal nf = new NotaFiscal();
-        nf.setCpfCliente(CpfClienteInput.getText());
+        Cliente cl = new ClienteDAO().getCliente(CpfClienteInput.getText());
+        nf.setCliente(cl);
 
         for(int i = 0; i < listaProdutosModel.size(); i++){
             String[] dados = listaProdutosModel.get(i).split(";");
@@ -492,7 +493,7 @@ public class LancamentoNotaFiscal extends javax.swing.JFrame {
             //TODO: Implementar condição de: 'nf.getStatus() != 'Cancelado'', para filtrar as notas fiscais
             tblNotasAnterioresModel.addRow(new Object[]{
                 nf.getCodNota(),
-                nf.getCpfCliente(),
+                nf.getCliente().getCpf(),
                 nf.getQtdTotal(),
                 nf.getSubTotal(),
                 nf.getDataVenda(),

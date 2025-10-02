@@ -168,7 +168,7 @@ public class GeradorDeRelatorios {
         Table tabelaInfos = new Table(UnitValue.createPercentArray(new float[]{34f, 33f, 33f}))
                 .setWidth(UnitValue.createPercentValue(100));
         tabelaInfos.addCell(criarCelulaInfo("Cliente\n" + nf.getCliente().getNome()));
-        tabelaInfos.addCell(criarCelulaInfo("Data Compra\n" + nf.getDataVenda()));
+        tabelaInfos.addCell(criarCelulaInfo("Data Compra\n" + nf.getDataVenda().format(formatadorData)));
         tabelaInfos.addCell(criarCelulaInfo("Total Itens\n" + nf.getQtdTotal()));
         document.add(tabelaInfos);
 
