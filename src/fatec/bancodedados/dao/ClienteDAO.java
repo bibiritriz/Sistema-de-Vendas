@@ -18,7 +18,7 @@ public class ClienteDAO {
         conn = this.conexao.getConexao();
     }
     
-    public void inserir(Cliente cl){
+    public void inserir(Cliente cl)throws SQLException{
         try {
             String sql = "INSERT INTO clientes (cpfCliente, nome, codEndereco, email, telefone) VALUES (?,?,?,?,?)";
             PreparedStatement stmt = this.conn.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class ClienteDAO {
             stmt.setString(5, cl.getTelefone());
             stmt.execute();
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir cliente: " + e.getMessage());
+            throw e;
         }
     }
     

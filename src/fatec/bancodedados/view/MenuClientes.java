@@ -15,6 +15,11 @@ import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.Endereco;
 import static fatec.bancodedados.service.viaCEPService.buscarEnderecoPorCep;
+import fatec.bancodedados.util.CustomFilter;
+import static fatec.bancodedados.util.CustomFilter.isCPFValido;
+import static fatec.bancodedados.util.CustomFilter.isEmailValido;
+import java.sql.SQLException;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -27,6 +32,7 @@ public class MenuClientes extends javax.swing.JFrame {
         initComponents();
         tblClienteModel = (DefaultTableModel) ClienteTable.getModel();
         carregarClientes();
+        definirValidacoes();
     }
     
 
@@ -419,12 +425,42 @@ public class MenuClientes extends javax.swing.JFrame {
         String email = EmailLabel.getText().trim();
         String telefone = TelefoneInput.getText().trim();
         String cep = CEPLabel.getText().trim();
+        String logradouro = LogradouroInput.getText().trim();
         String cpf = CpfInput.getText().trim();
+        boolean emailValido = isEmailValido(email);
+        boolean cpfValido = isCPFValido(cpf);
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cpf.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cep.isEmpty() || cpf.isEmpty()) {
             JOptionPane.showMessageDialog(
                 this,
-                "Os campos Cpf, Nome, Email e Telefone são obrigatórios.",
+                "Os campos Cpf,Nome, Email, Telefone e CEP são obrigatórios.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(!emailValido){
+            JOptionPane.showMessageDialog(
+                this,
+                "Email em um formato inválido.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(!cpfValido){
+            JOptionPane.showMessageDialog(
+                this,
+                "Cpf inválido.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(logradouro.isEmpty()){
+            JOptionPane.showMessageDialog(
+                this,
+                "Você precisa buscar por seu CEP.",
                 "Erro de Validação",
                 JOptionPane.ERROR_MESSAGE 
             );
@@ -479,7 +515,20 @@ public class MenuClientes extends javax.swing.JFrame {
             int codEndereco = clEndDAO.inserir(clEnd);
             Cliente cl = new Cliente(nome,codEndereco,email,telefone, cpf);
             ClienteDAO clDAO = new ClienteDAO();
-            clDAO.inserir(cl);
+            try {
+                clDAO.inserir(cl);
+            } catch (SQLException ex) {
+                if (ex.getSQLState().equals("23000")) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Erro!! Email já cadastrado.",
+                        "Erro de Validação",
+                        JOptionPane.ERROR_MESSAGE 
+                    );
+                } else {
+                    ex.printStackTrace(); // outros erros
+                }
+            }
             carregarClientes();        
         }
         limparFormulario();
@@ -656,6 +705,19 @@ public class MenuClientes extends javax.swing.JFrame {
         ComplementoInput.setText(end.getComplemento());
         NumeroInput.setText(end.getNumCasa());
     }
+    
+    private void definirValidacoes(){
+        ((AbstractDocument) CEPLabel.getDocument())
+                .setDocumentFilter(new CustomFilter(8, CustomFilter.Tipo.NUMEROS));
+        ((AbstractDocument) TelefoneInput.getDocument())
+                .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.NUMEROS));
+        ((AbstractDocument) NomeField.getDocument())
+                .setDocumentFilter(new CustomFilter(100, CustomFilter.Tipo.LETRAS));
+        ((AbstractDocument) CpfInput.getDocument())
+        .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.ALFANUMERICO));
+    }
+    
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
