@@ -1,7 +1,7 @@
 package fatec.bancodedados.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,18 +11,18 @@ import java.util.List;
 public class NotaFiscal {
 
     private int codNota;
-    private String cpfCliente;
-    private Date dataVenda;
+    private Cliente cliente;
+    private LocalDateTime dataVenda;
     private int qtdTotal;
     private double subTotal;
     private boolean status;
     private List<ProdutoNota> itens;
 
-    public NotaFiscal(int codNota, String cpfCliente, 
-            Date dataVenda, int qtdTotal, double subTotal,
+    public NotaFiscal(int codNota, Cliente cliente, 
+            LocalDateTime dataVenda, int qtdTotal, double subTotal,
             boolean status) {
         this.codNota = codNota;
-        this.cpfCliente = cpfCliente;
+        this.cliente = cliente;
         this.dataVenda = dataVenda;
         this.qtdTotal = qtdTotal;
         this.subTotal = subTotal;
@@ -41,12 +41,12 @@ public class NotaFiscal {
     public void addItem(ProdutoNota item) {
         itens.add(item);
     }
-
-    public void setCpfCliente(String cpfCliente) {
-        this.cpfCliente = cpfCliente;
+    
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public void setDataVenda(Date dataVenda) {
+    public void setDataVenda(LocalDateTime dataVenda) {
         this.dataVenda = dataVenda;
     }
 
@@ -66,11 +66,11 @@ public class NotaFiscal {
         return codNota;
     }
 
-    public String getCpfCliente() {
-        return cpfCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public Date getDataVenda() {
+    public LocalDateTime getDataVenda() {
         return dataVenda;
     }
 

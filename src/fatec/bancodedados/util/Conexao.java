@@ -59,7 +59,7 @@ Create database sistemavendas;
     dataVenda DATETIME DEFAULT CURRENT_TIMESTAMP,  
     qtdTotal INT NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,  
-    status BINARY not null default 1, 
+    status BINARY not null, 
     CONSTRAINT fk_notafiscal_cliente FOREIGN KEY (cpfCliente) REFERENCES Clientes (cpfCliente)  
   );  
 

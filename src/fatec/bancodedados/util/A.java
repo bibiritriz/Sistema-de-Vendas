@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author isaqu
  */
-public class Itext {
+public class A {
     public static void main(String[] args) throws FileNotFoundException{
         String path = "invoice.pdf";
         PdfWriter pdfWriter = new PdfWriter(path);
