@@ -16,6 +16,8 @@ import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.Endereco;
 import static fatec.bancodedados.service.viaCEPService.buscarEnderecoPorCep;
 import fatec.bancodedados.util.CustomFilter;
+import static fatec.bancodedados.util.CustomFilter.isCPFValido;
+import static fatec.bancodedados.util.CustomFilter.isEmailValido;
 import java.sql.SQLException;
 import javax.swing.text.AbstractDocument;
 
@@ -30,7 +32,6 @@ public class MenuClientes extends javax.swing.JFrame {
         initComponents();
         tblClienteModel = (DefaultTableModel) ClienteTable.getModel();
         carregarClientes();
-        CodigoGroupInput.setVisible(false);
         definirValidacoes();
     }
     
@@ -427,11 +428,12 @@ public class MenuClientes extends javax.swing.JFrame {
         String logradouro = LogradouroInput.getText().trim();
         String cpf = CpfInput.getText().trim();
         boolean emailValido = isEmailValido(email);
+        boolean cpfValido = isCPFValido(cpf);
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cep.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cep.isEmpty() || cpf.isEmpty()) {
             JOptionPane.showMessageDialog(
                 this,
-                "Os campos Nome, Email, Telefone e CEP são obrigatórios.",
+                "Os campos Cpf,Nome, Email, Telefone e CEP são obrigatórios.",
                 "Erro de Validação",
                 JOptionPane.ERROR_MESSAGE 
             );
@@ -441,6 +443,15 @@ public class MenuClientes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(
                 this,
                 "Email em um formato inválido.",
+                "Erro de Validação",
+                JOptionPane.ERROR_MESSAGE 
+            );
+            return;
+        }
+        if(!cpfValido){
+            JOptionPane.showMessageDialog(
+                this,
+                "Cpf inválido.",
                 "Erro de Validação",
                 JOptionPane.ERROR_MESSAGE 
             );
@@ -702,12 +713,11 @@ public class MenuClientes extends javax.swing.JFrame {
                 .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.NUMEROS));
         ((AbstractDocument) NomeField.getDocument())
                 .setDocumentFilter(new CustomFilter(100, CustomFilter.Tipo.LETRAS));
+        ((AbstractDocument) CpfInput.getDocument())
+        .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.ALFANUMERICO));
     }
     
-    public static boolean isEmailValido(String email) {
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        return email != null && email.matches(regex);
-    }
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
