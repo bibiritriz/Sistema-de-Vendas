@@ -1,5 +1,6 @@
 package fatec.bancodedados.dao;
 
+import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.util.Conexao;
 import fatec.bancodedados.model.NotaFiscal;
 import fatec.bancodedados.model.Produto;
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class NotaFiscalDAO {
         try{
             PreparedStatement stmt = conn.prepareStatement(sqlNF, 
                     Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, notaFiscal.getCodCliente());
+            stmt.setString(1, notaFiscal.getCpfCliente());
             stmt.execute();
             
             ResultSet rs = stmt.getGeneratedKeys();
@@ -61,6 +63,41 @@ public class NotaFiscalDAO {
         return notaFiscal;
     }
     
+    public List<NotaFiscal> getNotaFicaisPorData(LocalDateTime inicio, LocalDateTime fim){
+        String sql = "SELECT * FROM NOTASFICAIS nf join PRODUTONOTA pn ON"
+                + " nf.codNota = pn.codNota WHERE nf.dataVenda between ? and ?";
+        
+        try{
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setObject(1, inicio);
+            stmt.setObject(2, fim);
+            ResultSet rs = stmt.executeQuery();
+            
+            Map<Integer, NotaFiscal> mapNotaFiscal = new HashMap<>();
+            
+            while(rs.next()){
+                ProdutoDAO pDAO = new ProdutoDAO();
+                Produto p = pDAO.getProduto(rs.getInt("codProduto"));
+                ProdutoNota pn = new ProdutoNota(rs.getInt("codNota"), p, rs.getInt("qtdVendida"));
+                if(!mapNotaFiscal.containsKey(rs.getInt("codNota"))){
+                    ClienteDAO cDAO = new ClienteDAO();
+                    Cliente c = cDAO.getCliente(rs.getInt("codCliente"));
+                    NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
+                    c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
+                    rs.getInt("subtotal"), rs.getBoolean("status"));
+                    mapNotaFiscal.put(n.getCodNota(), n);
+                }
+               NotaFiscal nota = mapNotaFiscal.get(rs.getInt("codNota"));
+               nota.addItem(pn);
+            } 
+        }
+        catch(SQLException e) {
+            System.out.println("Erro ao buscar notas fiscais por data: " 
+                    + e.getMessage());
+            return null;
+        }
+    }
+    
     public NotaFiscal getNotaFiscal(int codNota){
         String sqlNf = "SELECT * FROM notasfiscais WHERE codNota = ?";
         String sqlItens = "SELECT * FROM ProdutosNotas WHERE codNota = ?";
@@ -74,9 +111,11 @@ public class NotaFiscalDAO {
             ResultSet rs = stmt.executeQuery();
             rs.first();
             
+            ClienteDAO cDAO = new ClienteDAO();
+                Cliente c = cDAO.getCliente(rs.getString("cpfCliente"));
+            
             NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
-                    rs.getInt("codCliente"), 
-                    rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
+                    c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
             
             stmt = conn.prepareStatement(sqlItens);
@@ -111,9 +150,10 @@ public class NotaFiscalDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
+                ClienteDAO cDAO = new ClienteDAO();
+                Cliente c = cDAO.getCliente(rs.getString("cpfCliente"));
                 NotaFiscal n = new NotaFiscal(rs.getInt("codNota"), 
-                    rs.getInt("codCliente"), 
-                    rs.getDate("dataVenda"), rs.getInt("qtdTotal"),
+                    c, rs.getObject("dataVenda", LocalDateTime.class), rs.getInt("qtdTotal"),
                     rs.getInt("subtotal"), rs.getBoolean("status"));
                  notasFiscais.add(n);
                  notaFiscalMap.put(n.getCodNota(), n);
