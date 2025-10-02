@@ -53,7 +53,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="NomeUsuarioLabel" min="-2" pref="105" max="-2" attributes="0"/>
-                                          <Component id="CodClienteInput" min="-2" pref="105" max="-2" attributes="0"/>
+                                          <Component id="CpfClienteInput" min="-2" pref="105" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="SelecionarClienteBotao" min="-2" max="-2" attributes="0"/>
@@ -94,7 +94,7 @@
               <Component id="NomeUsuarioLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="CodClienteInput" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CpfClienteInput" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="SelecionarClienteBotao" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -237,10 +237,10 @@
     </Component>
     <Component class="javax.swing.JLabel" name="NomeUsuarioLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="C&#xf3;digo Cliente"/>
+        <Property name="text" type="java.lang.String" value="Cpf Cliente"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="CodClienteInput">
+    <Component class="javax.swing.JTextField" name="CpfClienteInput">
       <Properties>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
