@@ -18,6 +18,7 @@ import fatec.bancodedados.dao.ProdutoDAO;
 import fatec.bancodedados.dto.ProdutoMaisVendido;
 import fatec.bancodedados.model.NotaFiscal;
 import fatec.bancodedados.model.ProdutoNota;
+import fatec.bancodedados.service.EmailService;
 
 import java.io.FileNotFoundException;
 import java.text.NumberFormat;
@@ -43,6 +44,9 @@ public class GeradorDeRelatorios {
     // =================================================================================
     // 2. MÉTODOS PÚBLICOS (PONTOS DE ENTRADA)
     // =================================================================================
+    
+    //Serviços
+    private final EmailService emailservice = new EmailService();
 
     public void gerarHistoricoCompleto() throws FileNotFoundException {
         List<NotaFiscal> nfs = new NotaFiscalDAO().getNotaFiscais();
@@ -57,6 +61,7 @@ public class GeradorDeRelatorios {
 
         document.close();
         System.out.println("Relatório de histórico gerado em: " + path);
+        emailservice.sendEmailWithAttachment("isaquebatista400@gmail.com", "Relatório de Histório Copmleto", path);
     }
 
     public void gerarRelatorioVendasPorPeriodo(LocalDateTime inicio, LocalDateTime fim) throws FileNotFoundException {
@@ -73,6 +78,8 @@ public class GeradorDeRelatorios {
 
         document.close();
         System.out.println("Relatório de vendas por período gerado em: " + path);
+        emailservice.sendEmailWithAttachment("isaquebatista400@gmail.com", "Relatório de Vendas por Período", path);
+    
     }
 
     public void gerarRelatorioProdutosMaisVendidos() throws FileNotFoundException {
@@ -108,6 +115,7 @@ public class GeradorDeRelatorios {
         document.add(tabela);
         document.close();
         System.out.println("Relatório de produtos mais vendidos gerado em: " + path);
+        emailservice.sendEmailWithAttachment("isaquebatista400@gmail.com", "Relatório de Histório Produtos mais vendidos", path);
     }
 
 
