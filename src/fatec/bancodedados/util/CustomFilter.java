@@ -1,5 +1,6 @@
 package fatec.bancodedados.util;
 
+import java.util.regex.Pattern;
 import javax.swing.text.*;
 
 public class CustomFilter extends DocumentFilter {
@@ -15,8 +16,14 @@ public class CustomFilter extends DocumentFilter {
         this.tipo = tipo;
     }
     public static boolean isEmailValido(String email) {
-        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        return email != null && email.matches(regex);
+    if (email == null || email.isEmpty()) {
+        return false;
+    }
+    
+    String regex = "^[A-Za-z0-9+_.-]+@(?:gmail\\.com|hotmail\\.com|outlook\\.com|yahoo\\.com|yahoo\\.com\\.br)$";
+    
+    // Compila a regex e verifica se o email corresponde ao padrão
+    return Pattern.compile(regex).matcher(email).matches();
     }
         
     public static boolean isCPFValido(String cpf) {
