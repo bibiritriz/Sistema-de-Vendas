@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Cliente;
 import fatec.bancodedados.model.Endereco;
+import fatec.bancodedados.service.EmailService;
+import fatec.bancodedados.service.OtpService;
 import static fatec.bancodedados.service.viaCEPService.buscarEnderecoPorCep;
 import fatec.bancodedados.util.CustomFilter;
 import static fatec.bancodedados.util.CustomFilter.isCPFValido;
@@ -27,6 +29,8 @@ import javax.swing.text.AbstractDocument;
  */
 public class MenuClientes extends javax.swing.JFrame {
     private DefaultTableModel tblClienteModel;
+    private final OtpService otpService = OtpService.getInstance();
+    private final EmailService emailService = new EmailService();
 
     public MenuClientes() {
         initComponents();
@@ -320,7 +324,6 @@ public class MenuClientes extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/userIcon.png"))); // NOI18N
         jLabel2.setText("Gerenciamento de Clientes");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Clientes", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -415,8 +418,6 @@ public class MenuClientes extends javax.swing.JFrame {
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
-        FormulárioCliente.getAccessibleContext().setAccessibleName("Novo Cliente");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -501,7 +502,13 @@ public class MenuClientes extends javax.swing.JFrame {
             carregarClientes();
         }else{
             //Criar
-            Endereco clEnd = new Endereco(
+            String otp = otpService.generateOtp(email);
+            emailService.sendOtpEmail(email, otp);
+            
+            String otpDigitado = JOptionPane.showInputDialog(this, "Digite o código...");
+            
+            if (otpService.validateOtp(email, otpDigitado)){
+                 Endereco clEnd = new Endereco(
                     LogradouroInput.getText(),
                     ComplementoInput.getText(),
                     NumeroInput.getText(),
@@ -509,28 +516,37 @@ public class MenuClientes extends javax.swing.JFrame {
                     UfInput.getText(),
                     CidadeInput.getText(),
                     cep
-            );
-            EnderecoDAO clEndDAO = new EnderecoDAO();
-            //Inserir endereco deve retronar o ID;
-            int codEndereco = clEndDAO.inserir(clEnd);
-            Cliente cl = new Cliente(nome,codEndereco,email,telefone, cpf);
-            ClienteDAO clDAO = new ClienteDAO();
-            try {
-                clDAO.inserir(cl);
-            } catch (SQLException ex) {
-                if (ex.getSQLState().equals("23000")) {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Erro!! Emailou cpf já cadastrado.",
-                        "Erro de Validação",
-                        JOptionPane.ERROR_MESSAGE 
-                    );
-                    System.out.println(ex.getMessage());
-                    return;
-                } else {
-                    ex.printStackTrace();
-                    return;
+                );
+                EnderecoDAO clEndDAO = new EnderecoDAO();
+                //Inserir endereco deve retronar o ID;
+                int codEndereco = clEndDAO.inserir(clEnd);
+                Cliente cl = new Cliente(nome,codEndereco,email,telefone, cpf);
+                ClienteDAO clDAO = new ClienteDAO();
+                try {
+                    clDAO.inserir(cl);
+                } catch (SQLException ex) {
+                    if (ex.getSQLState().equals("23000")) {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Erro!! Emailou cpf já cadastrado.",
+                            "Erro de Validação",
+                            JOptionPane.ERROR_MESSAGE 
+                        );
+                        System.out.println(ex.getMessage());
+                        return;
+                    } else {
+                        ex.printStackTrace();
+                        return;
+                    }
                 }
+            }else{
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Verificação de email.",
+                    "Código informado inválido",
+                    JOptionPane.ERROR_MESSAGE 
+                );
+                return;
             }
             carregarClientes();        
         }
