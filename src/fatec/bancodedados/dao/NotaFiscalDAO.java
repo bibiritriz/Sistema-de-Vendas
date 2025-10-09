@@ -70,13 +70,13 @@ public class NotaFiscalDAO {
     public List<NotaFiscal> getNotaFicaisPorData(LocalDateTime inicio, LocalDateTime fim) {
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
                 + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
-                + "p.codProd, p.nome AS nomeProduto, p.precoVenda, p.qtdeEstoque,"
+                + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida "
                 + "FROM notasfiscais nf"
-                + "JOIN clientes c ON nf.cpfCliente = c.cpfCliente"
-                + "JOIN produtosnotas pn ON nf.codNota = pn.codNota"
-                + "JOIN produtos p ON pn.codProduto = p.codProd"
-                + "WHERE nf.dataVenda BETWEEN ? AND ?";
+                + " JOIN clientes c ON nf.cpfCliente = c.cpfCliente"
+                + " JOIN produtosnotas pn ON nf.codNota = pn.codNota"
+                + " JOIN produtos p ON pn.codProduto = p.codProduto"
+                + " WHERE nf.dataVenda BETWEEN ? AND ?";
 
         try (Connection conn = new Conexao().getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, inicio);
@@ -97,7 +97,7 @@ public class NotaFiscalDAO {
                         mapNotaFiscal.put(n.getCodNota(), n);
                     }
                     NotaFiscal notaFiscalExistente = mapNotaFiscal.get(rs.getInt("codNota"));
-                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdeEstoque"));
+                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
                     ProdutoNota pn = new ProdutoNota(
                             rs.getInt("codNota"),
                             p,
@@ -117,12 +117,12 @@ public class NotaFiscalDAO {
         Map<Integer, NotaFiscal> notaFiscalMap = new HashMap<>();
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
                 + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
-                + "p.codProd, p.nome AS nomeProduto, p.precoVenda, p.qtdeEstoque,"
+                + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida "
                 + "FROM notasfiscais nf"
                 + "JOIN clientes c ON nf.cpfCliente = c.cpf"
                 + "JOIN produtosnotas pn ON nf.codNota = pn.codNota"
-                + "JOIN produtos p ON pn.codProduto = p.codProd"
+                + "JOIN produtos p ON pn.codProduto = p.codProduto"
                 + " WHERE nf.codNota = ?";
 
         try (Connection conn = new Conexao().getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -142,7 +142,7 @@ public class NotaFiscalDAO {
                         notaFiscalMap.put(n.getCodNota(), n);
                     }
                     NotaFiscal notaFiscalExistente = notaFiscalMap.get(rs.getInt("codNota"));
-                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdeEstoque"));
+                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
                     ProdutoNota pn = new ProdutoNota(
                             rs.getInt("codNota"),
                             p,
@@ -162,7 +162,7 @@ public class NotaFiscalDAO {
         Map<Integer, NotaFiscal> notaFiscalMap = new HashMap<>();
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
                 + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
-                + "p.codProd, p.nome AS nomeProduto, p.precoVenda, p.qtdeEstoque,"
+                + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida FROM NotasFiscais nf join ProdutosNotas pn on nf.codNota = pn.codNota "
                 + "join clientes c on c.cpfCliente = nf.cpfCliente join Produtos p on pn.codProduto = p.codProduto";
 
@@ -182,7 +182,7 @@ public class NotaFiscalDAO {
                         notaFiscalMap.put(n.getCodNota(), n);
                     }
                     NotaFiscal notaFiscalExistente = notaFiscalMap.get(rs.getInt("codNota"));
-                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdeEstoque"));
+                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nomeProduto"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
                     ProdutoNota pn = new ProdutoNota(
                             rs.getInt("codNota"),
                             p,
