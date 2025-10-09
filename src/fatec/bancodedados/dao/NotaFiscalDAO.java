@@ -73,7 +73,7 @@ public class NotaFiscalDAO {
                 + "p.codProd, p.nome AS nomeProduto, p.precoVenda, p.qtdeEstoque,"
                 + "pn.qtdVendida "
                 + "FROM notasfiscais nf"
-                + "JOIN clientes c ON nf.cpfCliente = c.cpf"
+                + "JOIN clientes c ON nf.cpfCliente = c.cpfCliente"
                 + "JOIN produtosnotas pn ON nf.codNota = pn.codNota"
                 + "JOIN produtos p ON pn.codProduto = p.codProd"
                 + "WHERE nf.dataVenda BETWEEN ? AND ?";
@@ -163,7 +163,7 @@ public class NotaFiscalDAO {
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
                 + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
                 + "p.codProd, p.nome AS nomeProduto, p.precoVenda, p.qtdeEstoque,"
-                + "pn.qtdVendida FROM NotasFicais nf join ProdutosNotas pn on nf.codNota = pn.codNota "
+                + "pn.qtdVendida FROM NotasFiscais nf join ProdutosNotas pn on nf.codNota = pn.codNota "
                 + "join clientes c on c.cpfCliente = nf.cpfCliente join Produtos p on pn.codProduto = p.codProduto";
 
         try (Connection conn = new Conexao().getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
