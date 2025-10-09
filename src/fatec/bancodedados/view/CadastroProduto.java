@@ -5,8 +5,12 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import fatec.bancodedados.model.Produto;
 import fatec.bancodedados.util.CustomFilter;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 /**
  *
@@ -19,8 +23,7 @@ public class CadastroProduto extends javax.swing.JFrame {
      */
     public CadastroProduto() {
         initComponents();
-        listarProdutos();
-        carregarValidacao();
+        listarProdutos();        
         panelCod.setVisible(false);
     }
 
@@ -43,12 +46,12 @@ public class CadastroProduto extends javax.swing.JFrame {
         tfCodProduto = new javax.swing.JTextField();
         javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
         btnLimpar = new javax.swing.JButton();
-        tfPreco = new javax.swing.JTextField();
         btnEditar = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
         NomeErrorLabel = new javax.swing.JLabel();
         QuantidadeErrorLabel = new javax.swing.JLabel();
         PrecoErrorLabel = new javax.swing.JLabel();
+        tfPreco = new javax.swing.JFormattedTextField();
         javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
@@ -138,17 +141,6 @@ public class CadastroProduto extends javax.swing.JFrame {
             }
         });
 
-        tfPreco.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tfPrecoFocusLost(evt);
-            }
-        });
-        tfPreco.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfPrecoActionPerformed(evt);
-            }
-        });
-
         btnEditar.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/pencil.png"))); // NOI18N
         btnEditar.setText("Editar");
@@ -174,6 +166,12 @@ public class CadastroProduto extends javax.swing.JFrame {
 
         PrecoErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
 
+        tfPreco.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfPrecoFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -190,22 +188,21 @@ public class CadastroProduto extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfPreco)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(tfPreco, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnSalvar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                                        .addComponent(btnSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(13, 13, 13)
                                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnDeletar)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnLimpar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(217, 217, 217)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(tfQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))))
@@ -369,29 +366,42 @@ public class CadastroProduto extends javax.swing.JFrame {
             tfNome.setText(model.getValueAt(linha, 1).toString());
             tfDescricao.setText(model.getValueAt(linha, 2) == null ?
                 "" : model.getValueAt(linha, 2).toString());
-            tfPreco.setText(model.getValueAt(linha, 3).toString());
+            
+            try {
+                double preco = Double.parseDouble(model.getValueAt(linha, 3).toString());
+                tfPreco.setValue(preco);
+            } catch (NumberFormatException e) {
+                tfPreco.setValue(null);
+            }
+            
+            
             tfQuantidade.setText(model.getValueAt(linha, 4).toString());
         }
     }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void tfPrecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPrecoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfPrecoActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         panelCod.setVisible(false);
         tfCodProduto.setText("");
         tfNome.setText("");
         tfDescricao.setText("");
-        tfPreco.setText("");
+        tfPreco.setValue(null);
         tfQuantidade.setText("");
+        QuantidadeErrorLabel.setText("");
+        NomeErrorLabel.setText("");
+        PrecoErrorLabel.setText("");
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         String codProd = tfCodProduto.getText();
         String nome = tfNome.getText();
         String descricao = tfDescricao.getText();
-        String preco = tfPreco.getText();
+        
+        Object valorPrecoObj = tfPreco.getValue();
+        double preco = 0.0;
+        if (valorPrecoObj instanceof Number) {
+            preco = ((Number) valorPrecoObj).doubleValue();
+        }
+        
         String quantidade = tfQuantidade.getText();
         
         if(!validarFormularioCompleto()){
@@ -408,7 +418,7 @@ public class CadastroProduto extends javax.swing.JFrame {
 
                 Produto p = new Produto(Integer.parseInt(codProd),
                     nome,
-                    Double.parseDouble(preco),
+                    preco,
                     Integer.parseInt(quantidade));
                 p.setDescricao(descricao);
 
@@ -423,7 +433,7 @@ public class CadastroProduto extends javax.swing.JFrame {
 
                 JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
             } else{
-                Produto p = new Produto(nome, Double.parseDouble(preco),
+                Produto p = new Produto(nome, preco,
                     Integer.parseInt(quantidade));
                 p.setDescricao(descricao);
 
@@ -452,18 +462,6 @@ public class CadastroProduto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tfNomeFocusLost
 
-    private void tfPrecoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPrecoFocusLost
-        String preco = tfPreco.getText().trim();
-        
-        if(preco.isEmpty()){
-            PrecoErrorLabel.setText("O preco é obrigatório!");
-        }else if (Double.parseDouble(preco) <= 0){
-            PrecoErrorLabel.setText("O preço tem que ser maior que 0");
-        }else{
-            PrecoErrorLabel.setText("");
-        }
-    }//GEN-LAST:event_tfPrecoFocusLost
-
     private void tfQuantidadeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfQuantidadeFocusLost
         String quantidade = tfQuantidade.getText().trim();
         
@@ -475,6 +473,16 @@ public class CadastroProduto extends javax.swing.JFrame {
             QuantidadeErrorLabel.setText("");
         }
     }//GEN-LAST:event_tfQuantidadeFocusLost
+
+    private void tfPrecoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPrecoFocusLost
+        Object valorObjeto = tfPreco.getValue();
+
+        if (valorObjeto == null) {
+            PrecoErrorLabel.setText("O preço é obrigatório!");
+        } else {
+            PrecoErrorLabel.setText("");
+        }
+    }//GEN-LAST:event_tfPrecoFocusLost
 
     private void listarProdutos(){
         DefaultTableModel model = (DefaultTableModel) tabelaProdutos.getModel();
@@ -530,66 +538,54 @@ public class CadastroProduto extends javax.swing.JFrame {
         
     }
     private void carregarValidacao(){
-        ((AbstractDocument) tfPreco.getDocument())
-        .setDocumentFilter(new CustomFilter(10, CustomFilter.Tipo.NUMEROS));
         ((AbstractDocument) tfQuantidade.getDocument())
         .setDocumentFilter(new CustomFilter(4, CustomFilter.Tipo.NUMEROS));
     }
     
     private boolean validarFormularioCompleto() {
-    boolean isFormularioValido = true;
+        boolean isFormularioValido = true;
 
-    // --- Validação do Nome ---
-    String nome = tfNome.getText().trim();
-    if (nome.isEmpty()) {
-        NomeErrorLabel.setText("O Nome é obrigatório!");
-        isFormularioValido = false;
-    } else {
-        NomeErrorLabel.setText("");
-    }
-
-    // --- Validação do Preço ---
-    String precoStr = tfPreco.getText().trim();
-    if (precoStr.isEmpty()) {
-        PrecoErrorLabel.setText("O preço é obrigatório!");
-        isFormularioValido = false;
-    } else {
-        try {
-            double preco = Double.parseDouble(precoStr.replace(",", "."));
-            if (preco <= 0) {
-                PrecoErrorLabel.setText("O preço deve ser maior que 0");
-                isFormularioValido = false;
-            } else {
-                PrecoErrorLabel.setText("");
-            }
-        } catch (NumberFormatException e) {
-            PrecoErrorLabel.setText("Preço inválido! Use apenas números.");
+        // --- Validação do Nome ---
+        String nome = tfNome.getText().trim();
+        if (nome.isEmpty()) {
+            NomeErrorLabel.setText("O Nome é obrigatório!");
             isFormularioValido = false;
+        } else {
+            NomeErrorLabel.setText("");
         }
-    }
 
-    // --- Validação da Quantidade ---
-    String quantidadeStr = tfQuantidade.getText().trim();
-    if (quantidadeStr.isEmpty()) {
-        QuantidadeErrorLabel.setText("A quantidade é obrigatória!");
-        isFormularioValido = false;
-    } else {
-        try {
-            int quantidade = Integer.parseInt(quantidadeStr);
-            if (quantidade < 0) {
-                QuantidadeErrorLabel.setText("A quantidade deve ser maior que 0");
-                isFormularioValido = false;
-            } else {
-                QuantidadeErrorLabel.setText("");
-            }
-        } catch (NumberFormatException e) {
-            QuantidadeErrorLabel.setText("Quantidade inválida! Use apenas números inteiros.");
+        // --- Validação do Preço ---
+        Object valorPrecoObj = tfPreco.getValue();
+        if (valorPrecoObj == null) {
+            PrecoErrorLabel.setText("O preço é obrigatório!");
             isFormularioValido = false;
+        } else {
+            // A máscara já força o valor a ser válido e não-negativo
+            PrecoErrorLabel.setText("");
         }
-    }
-    return isFormularioValido;
-}
 
+        // --- Validação da Quantidade ---
+        String quantidadeStr = tfQuantidade.getText().trim();
+        if (quantidadeStr.isEmpty()) {
+            QuantidadeErrorLabel.setText("A quantidade é obrigatória!");
+            isFormularioValido = false;
+        } else {
+            try {
+                int quantidade = Integer.parseInt(quantidadeStr);
+                if (quantidade < 0) {
+                    QuantidadeErrorLabel.setText("A quantidade deve ser maior que 0");
+                    isFormularioValido = false;
+                } else {
+                    QuantidadeErrorLabel.setText("");
+                }
+            } catch (NumberFormatException e) {
+                QuantidadeErrorLabel.setText("Quantidade inválida! Use apenas números inteiros.");
+                isFormularioValido = false;
+            }
+        }
+        return isFormularioValido;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel NomeErrorLabel;
     private javax.swing.JLabel PrecoErrorLabel;
@@ -603,7 +599,7 @@ public class CadastroProduto extends javax.swing.JFrame {
     private javax.swing.JTextField tfCodProduto;
     private javax.swing.JTextField tfDescricao;
     private javax.swing.JTextField tfNome;
-    private javax.swing.JTextField tfPreco;
+    private javax.swing.JFormattedTextField tfPreco;
     private javax.swing.JTextField tfQuantidade;
     // End of variables declaration//GEN-END:variables
 }
