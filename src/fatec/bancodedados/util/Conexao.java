@@ -174,6 +174,10 @@ Create database sistemavendas;
                     WHERE pn.codNota = OLD.codNota
                 )
             WHERE nf.codNota = OLD.codNota;
+            
+            UPDATE produtos
+            SET qtdEstoque = qtdEstoque + OLD.qtdVendida
+            WHERE codProduto = OLD.codProduto;
         END$$
 
     DELIMITER ;
@@ -220,6 +224,27 @@ Create database sistemavendas;
         END$$
 
     DELIMITER ;
+    
+    * DELIMITER $$
+
+    CREATE TRIGGER tgr_after_update_cancelar_notafiscal
+    AFTER UPDATE ON notasfiscais
+    FOR EACH ROW
+    BEGIN
+        IF OLD.status <> 0 AND NEW.status = 0 THEN
+
+            UPDATE produtos p
+            JOIN produtosnotas pn ON p.codProduto = pn.codProduto
+            SET 
+                p.qtdEstoque = p.qtdEstoque + pn.qtdVendida
+            WHERE 
+                pn.codNota = NEW.codNota;
+
+        END IF;
+    END$$
+
+    DELIMITER ;
+    * 
 
   * 
   * 
