@@ -22,6 +22,7 @@ import static fatec.bancodedados.util.CustomFilter.isCPFValido;
 import static fatec.bancodedados.util.CustomFilter.isEmailValido;
 import java.sql.SQLException;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -37,6 +38,7 @@ public class MenuClientes extends javax.swing.JFrame {
         tblClienteModel = (DefaultTableModel) ClienteTable.getModel();
         carregarClientes();
         definirValidacoes();
+        carregarMascaras();
     }
     
 
@@ -54,16 +56,12 @@ public class MenuClientes extends javax.swing.JFrame {
         ExcluirButton = new javax.swing.JButton();
         BotaoEditar = new javax.swing.JButton();
         FormulárioCliente = new javax.swing.JPanel();
-        TelefoneInput = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         NomeField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        CEPLabel = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         EmailLabel = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        CodigoGroupInput = new javax.swing.JPanel();
-        CpfInput = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         BotaoBuscarCEP = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -78,6 +76,14 @@ public class MenuClientes extends javax.swing.JFrame {
         ComplementoInput = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         NumeroInput = new javax.swing.JTextField();
+        cpfErrorLabel = new javax.swing.JLabel();
+        nomeErrorLabel = new javax.swing.JLabel();
+        emailErrorLabel = new javax.swing.JLabel();
+        telefoneErrorLabel = new javax.swing.JLabel();
+        cepErrorLabel = new javax.swing.JLabel();
+        CpfInput = new javax.swing.JFormattedTextField();
+        TelefoneInput = new javax.swing.JFormattedTextField();
+        CEPLabel = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -124,52 +130,34 @@ public class MenuClientes extends javax.swing.JFrame {
 
         FormulárioCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Novo Cliente"));
 
-        TelefoneInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
-
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel1.setText("Nome ");
 
         NomeField.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+        NomeField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                NomeFieldFocusLost(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel3.setText("Cep");
-
-        CEPLabel.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel4.setText("Email");
 
         EmailLabel.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
+        EmailLabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                EmailLabelFocusLost(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel5.setText("Telefone");
 
-        CpfInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
-
         jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jLabel6.setText("Cpf");
-
-        javax.swing.GroupLayout CodigoGroupInputLayout = new javax.swing.GroupLayout(CodigoGroupInput);
-        CodigoGroupInput.setLayout(CodigoGroupInputLayout);
-        CodigoGroupInputLayout.setHorizontalGroup(
-            CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CodigoGroupInputLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CodigoGroupInputLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(0, 143, Short.MAX_VALUE))
-                    .addComponent(CpfInput, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        CodigoGroupInputLayout.setVerticalGroup(
-            CodigoGroupInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CodigoGroupInputLayout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CpfInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
 
         BotaoBuscarCEP.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         BotaoBuscarCEP.setText("Buscar");
@@ -218,6 +206,34 @@ public class MenuClientes extends javax.swing.JFrame {
 
         NumeroInput.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
 
+        cpfErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+
+        nomeErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+
+        emailErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+
+        telefoneErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+
+        cepErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+
+        CpfInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                CpfInputFocusLost(evt);
+            }
+        });
+
+        TelefoneInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TelefoneInputFocusLost(evt);
+            }
+        });
+
+        CEPLabel.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                CEPLabelFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout FormulárioClienteLayout = new javax.swing.GroupLayout(FormulárioCliente);
         FormulárioCliente.setLayout(FormulárioClienteLayout);
         FormulárioClienteLayout.setHorizontalGroup(
@@ -241,56 +257,84 @@ public class MenuClientes extends javax.swing.JFrame {
                                 .addComponent(CidadeInput))))
                     .addGroup(FormulárioClienteLayout.createSequentialGroup()
                         .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(LogradouroInput, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
+                            .addComponent(CEPLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(CEPLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(BotaoBuscarCEP))
+                                .addComponent(jLabel12)
+                                .addContainerGap(81, Short.MAX_VALUE))
+                            .addComponent(NumeroInput)))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addComponent(emailErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(220, 220, 220))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addComponent(nomeErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(163, 163, 163))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
                             .addComponent(ComplementoInput, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)
+                            .addComponent(cpfErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(FormulárioClienteLayout.createSequentialGroup()
                                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
                                     .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(telefoneErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
                     .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LogradouroInput, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
-                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addContainerGap())
-                            .addComponent(NumeroInput)))))
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(BotaoBuscarCEP)
+                            .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cepErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(CpfInput, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         FormulárioClienteLayout.setVerticalGroup(
             FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FormulárioClienteLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(CodigoGroupInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addGap(1, 1, 1)
-                .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE)
-                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FormulárioClienteLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(2, 2, 2)
-                        .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FormulárioClienteLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
+                .addContainerGap()
+                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(CpfInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cpfErrorLabel)
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(NomeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(nomeErrorLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addGap(1, 1, 1)
+                        .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(EmailLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TelefoneInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(FormulárioClienteLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addGap(25, 25, 25)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailErrorLabel)
+                    .addComponent(telefoneErrorLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -298,9 +342,11 @@ public class MenuClientes extends javax.swing.JFrame {
                     .addComponent(CEPLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BotaoBuscarCEP))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel12))
+                .addComponent(cepErrorLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LogradouroInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -380,15 +426,17 @@ public class MenuClientes extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(360, 360, 360)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(FormulárioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(criarBotao)
@@ -415,7 +463,7 @@ public class MenuClientes extends javax.swing.JFrame {
                     .addComponent(ExcluirButton)
                     .addComponent(BotaoEditar)
                     .addComponent(BotaoLimpar))
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         pack();
@@ -424,61 +472,22 @@ public class MenuClientes extends javax.swing.JFrame {
     private void criarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criarBotaoActionPerformed
         String nome = NomeField.getText().trim();
         String email = EmailLabel.getText().trim();
-        String telefone = TelefoneInput.getText().trim();
-        String cep = CEPLabel.getText().trim();
+        String telefone = TelefoneInput.getText().trim().replaceAll("[^0-9]", "");
+        String cep = CEPLabel.getText().trim().replaceAll("[^0-9]", "");
         String logradouro = LogradouroInput.getText().trim();
-        String cpf = CpfInput.getText().trim();
-        boolean emailValido = isEmailValido(email);
-        boolean cpfValido = isCPFValido(cpf);
-
-        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || cep.isEmpty() || cpf.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Os campos Cpf,Nome, Email, Telefone e CEP são obrigatórios.",
-                "Erro de Validação",
-                JOptionPane.ERROR_MESSAGE 
-            );
-            return;
-        }
-        if(!emailValido){
-            JOptionPane.showMessageDialog(
-                this,
-                "Email em um formato inválido.",
-                "Erro de Validação",
-                JOptionPane.ERROR_MESSAGE 
-            );
-            return;
-        }
-        if(!cpfValido){
-            JOptionPane.showMessageDialog(
-                this,
-                "Cpf inválido.",
-                "Erro de Validação",
-                JOptionPane.ERROR_MESSAGE 
-            );
-            return;
-        }
-        if(logradouro.isEmpty()){
-            JOptionPane.showMessageDialog(
-                this,
-                "Você precisa buscar por seu CEP.",
-                "Erro de Validação",
-                JOptionPane.ERROR_MESSAGE 
-            );
+        String cpf = CpfInput.getText().trim().replaceAll("[^0-9]", "");
+        
+        if(!validarFormularioCompleto()){
+            JOptionPane.showMessageDialog(this, "Por favor, corrija os campos em vermelho.", "Formulário Inválido", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(!CpfInput.isEnabled()){
             //Editar
             Cliente cl = new Cliente();
-            cl.setCpf(CpfInput.getText());
+            cl.setCpf(cpf);
             cl.setEmail(email);
             cl.setNome(nome);
             cl.setTelefone(telefone);
-            
-            System.out.println("NomeField: " + NomeField);
-            System.out.println("EmailLabel: " + EmailLabel);
-            System.out.println("CpfInput: " + CpfInput);
-
             
             EnderecoDAO endDAO = new EnderecoDAO();
             
@@ -489,10 +498,9 @@ public class MenuClientes extends javax.swing.JFrame {
             end.setBairro(BairroInput.getText());
             end.setUf(UfInput.getText());
             end.setCidade(CidadeInput.getText());
-            end.setCep(CEPLabel.getText());
+            end.setCep(cep);
             end.setComplemento(ComplementoInput.getText());
 
-            System.out.println("Código: " + end.getCodEndereco());
             endDAO.editar(end);
             
             cl.setCodEndereco(end.getCodEndereco());
@@ -586,7 +594,6 @@ public class MenuClientes extends javax.swing.JFrame {
         if (ClienteTable.getSelectedRowCount() == 1) {
             int linha = ClienteTable.getSelectedRow();
             String cpfCliente = ClienteTable.getValueAt(linha, 0).toString();
-            CodigoGroupInput.setVisible(true);
             CpfInput.setText(String.valueOf(cpfCliente));
             CpfInput.setEnabled(false);
             
@@ -608,7 +615,7 @@ public class MenuClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_BotaoEditarActionPerformed
 
     private void BotaoBuscarCEPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoBuscarCEPActionPerformed
-        String cep = CEPLabel.getText().trim();
+        String cep = CEPLabel.getText().trim().replaceAll("[^0-9]", "");
 
         Endereco cepBuscado;
         try {
@@ -626,6 +633,63 @@ public class MenuClientes extends javax.swing.JFrame {
     private void ComplementoInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComplementoInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ComplementoInputActionPerformed
+
+    private void NomeFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_NomeFieldFocusLost
+        String nome = NomeField.getText().trim();
+        
+        if(nome.isEmpty()){
+            nomeErrorLabel.setText("O nome é obrigatório!");
+        }else{
+            nomeErrorLabel.setText("");
+        }
+    }//GEN-LAST:event_NomeFieldFocusLost
+
+    private void EmailLabelFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_EmailLabelFocusLost
+       String email = EmailLabel.getText().trim();
+       
+       if(email.isEmpty()){
+           emailErrorLabel.setText("O email é obrigatório");
+       }else if(!isEmailValido(email)){
+           emailErrorLabel.setText("O email fornecido é inválido");
+       }else{
+           emailErrorLabel.setText("");
+       }
+    }//GEN-LAST:event_EmailLabelFocusLost
+
+    private void CpfInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CpfInputFocusLost
+        String cpf = CpfInput.getText().trim().replaceAll("[^0-9]", "");
+        if (cpf.isEmpty()) {
+            cpfErrorLabel.setText("CPF é obrigatório!");
+        } else if (cpf.length() < 11) {
+            cpfErrorLabel.setText("O CPF deve ter 11 caracteres");
+        } else if (!isCPFValido(cpf)) {
+            cpfErrorLabel.setText("CPF inválido");
+        } else {
+            cpfErrorLabel.setText("");
+        }
+    }//GEN-LAST:event_CpfInputFocusLost
+
+    private void TelefoneInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TelefoneInputFocusLost
+        String telefone = TelefoneInput.getText().trim().replaceAll("[^0-9]", "");
+        if (telefone.isEmpty()) {
+            telefoneErrorLabel.setText("O telefone é obrigatório!");
+        } else if (telefone.length() < 11) {
+            telefoneErrorLabel.setText("O telefone deve conter 11 caracteres");
+        } else {
+            telefoneErrorLabel.setText("");
+        }
+    }//GEN-LAST:event_TelefoneInputFocusLost
+
+    private void CEPLabelFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CEPLabelFocusLost
+        String cep = CEPLabel.getText().trim().replaceAll("[^0-9]", "");
+        if (cep.isEmpty()) {
+            cepErrorLabel.setText("CEP é obrigatório");
+        } else if (cep.length() < 8) {
+            cepErrorLabel.setText("O CEP deve ter 8 caracteres");
+        } else {
+            cepErrorLabel.setText("");
+        }
+    }//GEN-LAST:event_CEPLabelFocusLost
 
     /**
      * @param args the command line arguments
@@ -686,7 +750,6 @@ public class MenuClientes extends javax.swing.JFrame {
         if (ClienteTable.getSelectedRowCount() == 1) {
            int linha = ClienteTable.getSelectedRow();
            int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
-           CodigoGroupInput.setVisible(true);
            CpfInput.setText(String.valueOf(cod));
 
            NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
@@ -714,6 +777,11 @@ public class MenuClientes extends javax.swing.JFrame {
         ComplementoInput.setText("");
         CpfInput.setText("");
         CpfInput.setEnabled(true);
+        cpfErrorLabel.setText("");
+        nomeErrorLabel.setText("");
+        emailErrorLabel.setText("");
+        telefoneErrorLabel.setText("");
+        cepErrorLabel.setText("");
     }
     
     private void preencherEndereco(Endereco end){
@@ -726,39 +794,116 @@ public class MenuClientes extends javax.swing.JFrame {
     }
     
     private void definirValidacoes(){
-        ((AbstractDocument) CEPLabel.getDocument())
-                .setDocumentFilter(new CustomFilter(8, CustomFilter.Tipo.NUMEROS));
-        ((AbstractDocument) TelefoneInput.getDocument())
-                .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.NUMEROS));
         ((AbstractDocument) NomeField.getDocument())
                 .setDocumentFilter(new CustomFilter(100, CustomFilter.Tipo.LETRAS));
-        ((AbstractDocument) CpfInput.getDocument())
-        .setDocumentFilter(new CustomFilter(11, CustomFilter.Tipo.ALFANUMERICO));
     }
     
+    private boolean validarFormularioCompleto() {
+        boolean isFormularioValido = true;
 
+        // --- Validação do CPF ---
+        String cpf = CpfInput.getText().trim().replaceAll("[^0-9]", "");
+        if (cpf.isEmpty()) {
+            cpfErrorLabel.setText("CPF é obrigatório!");
+            isFormularioValido = false;
+        } else if (cpf.length() < 11) {
+            cpfErrorLabel.setText("O CPF deve ter 11 caracteres");
+            isFormularioValido = false;
+        } else if (!isCPFValido(cpf)) {
+            cpfErrorLabel.setText("CPF inválido");
+            isFormularioValido = false;
+        } else {
+            cpfErrorLabel.setText("");
+        }
+
+        // --- Validação do Nome ---
+        String nome = NomeField.getText().trim();
+        if (nome.isEmpty()) {
+            nomeErrorLabel.setText("O nome é obrigatório!");
+            isFormularioValido = false;
+        } else {
+            nomeErrorLabel.setText("");
+        }
+
+        // --- Validação do E-mail ---
+        String email = EmailLabel.getText().trim();
+        if (email.isEmpty()) {
+            emailErrorLabel.setText("O email é obrigatório");
+            isFormularioValido = false;
+        } else if (!isEmailValido(email)) {
+            emailErrorLabel.setText("O email fornecido é inválido");
+            isFormularioValido = false;
+        } else {
+            emailErrorLabel.setText("");
+        }
+
+        // --- Validação do Telefone ---
+        String telefone = TelefoneInput.getText().trim().replaceAll("[^0-9]", "");
+        if (telefone.isEmpty()) {
+            telefoneErrorLabel.setText("O telefone é obrigatório!");
+            isFormularioValido = false;
+        } else if (telefone.length() < 11) {
+            telefoneErrorLabel.setText("O telefone deve conter 11 caracteres");
+            isFormularioValido = false;
+        } else {
+            telefoneErrorLabel.setText("");
+        }
+
+        // --- Validação do CEP ---
+        String cep = CEPLabel.getText().trim().replaceAll("[^0-9]", "");
+        if (cep.isEmpty()) {
+            cepErrorLabel.setText("CEP é obrigatório");
+            isFormularioValido = false;
+        } else if (cep.length() < 8) {
+            cepErrorLabel.setText("O CEP deve ter 8 caracteres");
+            isFormularioValido = false;
+        } else {
+            cepErrorLabel.setText("");
+        }
+
+        return isFormularioValido;
+    }
     
+    private void carregarMascaras(){
+        try {
+            // Máscara para o campo CPF
+            MaskFormatter mascaraCpf = new MaskFormatter("###.###.###-##");
+            mascaraCpf.install(CpfInput);
+
+            // Máscara para o campo CEP
+            MaskFormatter mascaraCep = new MaskFormatter("#####-###");
+            mascaraCep.install(CEPLabel);
+
+            // Máscara para o campo Telefone (celular com 9 dígitos)
+            MaskFormatter mascaraTelefone = new MaskFormatter("(##) #####-####");
+            mascaraTelefone.install(TelefoneInput);
+        } catch (java.text.ParseException ex) {
+            System.err.println("Erro ao criar as máscaras: " + ex.getMessage());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField BairroInput;
     private javax.swing.JButton BotaoBuscarCEP;
     private javax.swing.JButton BotaoEditar;
     private javax.swing.JButton BotaoLimpar;
-    private javax.swing.JTextField CEPLabel;
+    private javax.swing.JFormattedTextField CEPLabel;
     private javax.swing.JTextField CidadeInput;
     private javax.swing.JTable ClienteTable;
-    private javax.swing.JPanel CodigoGroupInput;
     private javax.swing.JTextField ComplementoInput;
-    private javax.swing.JTextField CpfInput;
+    private javax.swing.JFormattedTextField CpfInput;
     private javax.swing.JTextField EmailLabel;
     private javax.swing.JButton ExcluirButton;
     private javax.swing.JPanel FormulárioCliente;
     private javax.swing.JTextField LogradouroInput;
     private javax.swing.JTextField NomeField;
     private javax.swing.JTextField NumeroInput;
-    private javax.swing.JTextField TelefoneInput;
+    private javax.swing.JFormattedTextField TelefoneInput;
     private javax.swing.JTextField UfInput;
+    private javax.swing.JLabel cepErrorLabel;
+    private javax.swing.JLabel cpfErrorLabel;
     private javax.swing.JButton criarBotao;
+    private javax.swing.JLabel emailErrorLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -773,6 +918,8 @@ public class MenuClientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nomeErrorLabel;
+    private javax.swing.JLabel telefoneErrorLabel;
     // End of variables declaration//GEN-END:variables
 
 }
