@@ -51,7 +51,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         NomeErrorLabel = new javax.swing.JLabel();
         QuantidadeErrorLabel = new javax.swing.JLabel();
         PrecoErrorLabel = new javax.swing.JLabel();
-        tfPreco = new javax.swing.JFormattedTextField();
+        tfPreco = new javax.swing.JTextField();
         javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
@@ -188,11 +188,11 @@ public class CadastroProduto extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfPreco)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                         .addComponent(btnSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(tfPreco, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(13, 13, 13)
@@ -221,16 +221,16 @@ public class CadastroProduto extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(49, 49, 49)
                 .addComponent(panelCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(NomeErrorLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -366,14 +366,7 @@ public class CadastroProduto extends javax.swing.JFrame {
             tfNome.setText(model.getValueAt(linha, 1).toString());
             tfDescricao.setText(model.getValueAt(linha, 2) == null ?
                 "" : model.getValueAt(linha, 2).toString());
-            
-            try {
-                double preco = Double.parseDouble(model.getValueAt(linha, 3).toString());
-                tfPreco.setValue(preco);
-            } catch (NumberFormatException e) {
-                tfPreco.setValue(null);
-            }
-            
+            tfPreco.setText(model.getValueAt(linha, 3).toString());
             
             tfQuantidade.setText(model.getValueAt(linha, 4).toString());
         }
@@ -384,7 +377,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         tfCodProduto.setText("");
         tfNome.setText("");
         tfDescricao.setText("");
-        tfPreco.setValue(null);
+        tfPreco.setText("");
         tfQuantidade.setText("");
         QuantidadeErrorLabel.setText("");
         NomeErrorLabel.setText("");
@@ -395,12 +388,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         String codProd = tfCodProduto.getText();
         String nome = tfNome.getText();
         String descricao = tfDescricao.getText();
-        
-        Object valorPrecoObj = tfPreco.getValue();
-        double preco = 0.0;
-        if (valorPrecoObj instanceof Number) {
-            preco = ((Number) valorPrecoObj).doubleValue();
-        }
+        String preco = tfPreco.getText();
         
         String quantidade = tfQuantidade.getText();
         
@@ -418,7 +406,7 @@ public class CadastroProduto extends javax.swing.JFrame {
 
                 Produto p = new Produto(Integer.parseInt(codProd),
                     nome,
-                    preco,
+                    Double.parseDouble(preco),
                     Integer.parseInt(quantidade));
                 p.setDescricao(descricao);
 
@@ -433,10 +421,10 @@ public class CadastroProduto extends javax.swing.JFrame {
 
                 JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
             } else{
-                Produto p = new Produto(nome, preco,
+                Produto p = new Produto(nome, Double.parseDouble(preco),
                     Integer.parseInt(quantidade));
                 p.setDescricao(descricao);
-
+                
                 ProdutoDAO pDAO = new ProdutoDAO();
                 p = pDAO.inserir(p);
 
@@ -475,11 +463,13 @@ public class CadastroProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_tfQuantidadeFocusLost
 
     private void tfPrecoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPrecoFocusLost
-        Object valorObjeto = tfPreco.getValue();
-
-        if (valorObjeto == null) {
+        String preco = tfPreco.getText().trim();
+        
+        if(preco.isEmpty()){
             PrecoErrorLabel.setText("O preço é obrigatório!");
-        } else {
+        }else if(Double.parseDouble(preco) <= 0){
+            PrecoErrorLabel.setText("O preço tem que ser maior que 0");
+        }else {
             PrecoErrorLabel.setText("");
         }
     }//GEN-LAST:event_tfPrecoFocusLost
@@ -555,12 +545,15 @@ public class CadastroProduto extends javax.swing.JFrame {
         }
 
         // --- Validação do Preço ---
-        Object valorPrecoObj = tfPreco.getValue();
-        if (valorPrecoObj == null) {
+                String preco = tfPreco.getText().trim();
+        
+        if(preco.isEmpty()){
             PrecoErrorLabel.setText("O preço é obrigatório!");
             isFormularioValido = false;
-        } else {
-            // A máscara já força o valor a ser válido e não-negativo
+        }else if(Double.parseDouble(preco) <= 0){
+            PrecoErrorLabel.setText("O preço tem que ser maior que 0");
+            isFormularioValido = false;
+        }else {
             PrecoErrorLabel.setText("");
         }
 
@@ -599,7 +592,7 @@ public class CadastroProduto extends javax.swing.JFrame {
     private javax.swing.JTextField tfCodProduto;
     private javax.swing.JTextField tfDescricao;
     private javax.swing.JTextField tfNome;
-    private javax.swing.JFormattedTextField tfPreco;
+    private javax.swing.JTextField tfPreco;
     private javax.swing.JTextField tfQuantidade;
     // End of variables declaration//GEN-END:variables
 }
