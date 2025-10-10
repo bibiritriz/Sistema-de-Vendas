@@ -69,7 +69,7 @@ public class NotaFiscalDAO {
 
     public List<NotaFiscal> getNotaFicaisPorData(LocalDateTime inicio, LocalDateTime fim) {
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
-                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
+                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco, c.status"
                 + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida "
                 + "FROM notasfiscais nf"
@@ -86,7 +86,7 @@ public class NotaFiscalDAO {
                 while (rs.next()) {
                     NotaFiscal nt = mapNotaFiscal.get(rs.getInt("codNota"));
                     if (nt == null) {
-                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"));
+                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"), rs.getBoolean("status"));
                         NotaFiscal n = new NotaFiscal(
                                 rs.getInt("codNota"),
                                 c,
@@ -116,7 +116,7 @@ public class NotaFiscalDAO {
     public NotaFiscal getNotaFiscal(int codNota) {
         Map<Integer, NotaFiscal> notaFiscalMap = new HashMap<>();
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
-                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
+                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco, c.status"
                 + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida "
                 + "FROM notasfiscais nf"
@@ -131,7 +131,7 @@ public class NotaFiscalDAO {
                 while (rs.next()) {
                     NotaFiscal nt = notaFiscalMap.get(rs.getInt("codNota"));
                     if (nt == null) {
-                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"));
+                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"), rs.getBoolean("status"));
                         NotaFiscal n = new NotaFiscal(
                                 rs.getInt("codNota"),
                                 c,
@@ -161,7 +161,7 @@ public class NotaFiscalDAO {
     public List<NotaFiscal> getNotaFiscais() {
         Map<Integer, NotaFiscal> notaFiscalMap = new HashMap<>();
         String sql = "SELECT nf.codNota, nf.dataVenda, nf.status, nf.subtotal, nf.qtdTotal, nf.cpfCliente,"
-                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco,"
+                + "c.nome AS nomeCliente, c.email, c.telefone, c.codEndereco, c.status"
                 + "p.codProduto, p.nome AS nomeProduto, p.precoVenda, p.qtdEstoque,"
                 + "pn.qtdVendida FROM NotasFiscais nf join ProdutosNotas pn on nf.codNota = pn.codNota "
                 + "join clientes c on c.cpfCliente = nf.cpfCliente join Produtos p on pn.codProduto = p.codProduto";
@@ -171,7 +171,7 @@ public class NotaFiscalDAO {
                 while (rs.next()) {
                     NotaFiscal nt = notaFiscalMap.get(rs.getInt("codNota"));
                     if (nt == null) {
-                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"));
+                        Cliente c = new Cliente(rs.getString("nomeCliente"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"), rs.getBoolean("status"));
                         NotaFiscal n = new NotaFiscal(
                                 rs.getInt("codNota"),
                                 c,

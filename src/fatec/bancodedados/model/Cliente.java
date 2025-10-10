@@ -10,7 +10,24 @@ public class Cliente {
     private String email;
     private String telefone;
     private String cpf;
+    private boolean status;
 
+    public Cliente(
+            String nome, 
+            int codEndereco, 
+            String email, 
+            String telefone,
+            String cpf,
+            boolean status
+    ){
+        this.nome = nome;
+        this.codEndereco = codEndereco;
+        this.email = email;
+        this.telefone = telefone;
+        this.cpf = cpf;
+        this.status = status;
+    };
+    
     public Cliente(
             String nome, 
             int codEndereco, 
@@ -25,6 +42,8 @@ public class Cliente {
         this.cpf = cpf;
     };
     
+    public Cliente(){};
+    
     public String getCpf() {
         return cpf;
     }
@@ -33,9 +52,13 @@ public class Cliente {
         this.cpf = cpf;
     }
 
-    
-    public Cliente(){};
-    
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
     
     public String getNome() {
         return nome;

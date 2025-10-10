@@ -331,7 +331,6 @@ public class MenuClientes extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addGap(25, 25, 25)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailErrorLabel)
                     .addComponent(telefoneErrorLabel))
@@ -463,7 +462,7 @@ public class MenuClientes extends javax.swing.JFrame {
                     .addComponent(ExcluirButton)
                     .addComponent(BotaoEditar)
                     .addComponent(BotaoLimpar))
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
 
         pack();
