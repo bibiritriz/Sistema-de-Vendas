@@ -30,7 +30,8 @@ Create database sistemavendas;
     nome VARCHAR(255) NOT NULL,  
     email VARCHAR(255) UNIQUE NOT NULL,  
     telefone VARCHAR(15) NOT NULL,  
-    codEndereco INT NOT NULL,  
+    codEndereco INT NOT NULL,
+    status BINARY default 1 not null,
     CONSTRAINT fk_cliente_endereco FOREIGN KEY (codEndereco) REFERENCES Enderecos (codEndereco)  
   );  
 
@@ -44,7 +45,8 @@ Create database sistemavendas;
     nome VARCHAR(255) NOT NULL,  
     descricao TEXT,  
     precoVenda DECIMAL(10,2) NOT NULL,  
-    qtdEstoque INT NOT NULL DEFAULT 0  CHECK(qtdEstoque >= 0)
+    qtdEstoque INT NOT NULL DEFAULT 0  CHECK(qtdEstoque >= 0),
+    status BINARY default 1 not null 
   );  
   
      INSERT INTO Produtos (nome, descricao, precoVenda, qtdEstoque) VALUES
@@ -59,7 +61,7 @@ Create database sistemavendas;
     dataVenda DATETIME DEFAULT CURRENT_TIMESTAMP,  
     qtdTotal INT NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL,  
-    status BINARY not null, 
+    status BINARY default 1 not null, 
     CONSTRAINT fk_notafiscal_cliente FOREIGN KEY (cpfCliente) REFERENCES Clientes (cpfCliente)  
   );  
 

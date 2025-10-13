@@ -331,7 +331,6 @@ public class MenuClientes extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addGap(25, 25, 25)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FormulárioClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailErrorLabel)
                     .addComponent(telefoneErrorLabel))
@@ -463,7 +462,7 @@ public class MenuClientes extends javax.swing.JFrame {
                     .addComponent(ExcluirButton)
                     .addComponent(BotaoEditar)
                     .addComponent(BotaoLimpar))
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
 
         pack();
@@ -573,8 +572,7 @@ public class MenuClientes extends javax.swing.JFrame {
                 if(clEndereco == null){
                     JOptionPane.showMessageDialog(this, "Endereço do cliente não encontrado.");
                 } else {
-                    clDAO.excluir(cpfCliente);
-                    endDAO.excluir(clEndereco.getCodEndereco());
+                    clDAO.desativar(cpfCliente);
                     tblClienteModel.removeRow(ClienteTable.getSelectedRow());
                 }
             }
@@ -734,6 +732,7 @@ public class MenuClientes extends javax.swing.JFrame {
         List<Cliente> clientes = new ClienteDAO().getClientes();
         tblClienteModel.setRowCount(0);
         for (Cliente c : clientes) {
+            if(!c.isStatus()) continue;
             EnderecoDAO endDAO = new EnderecoDAO();
             Endereco clEnd = endDAO.buscarEnderecoPorCpfCliente(c.getCpf());
             tblClienteModel.addRow(new Object[]{
@@ -746,23 +745,6 @@ public class MenuClientes extends javax.swing.JFrame {
         }
     }
     
-    private void selecionarCliente() {
-        if (ClienteTable.getSelectedRowCount() == 1) {
-           int linha = ClienteTable.getSelectedRow();
-           int cod = Integer.parseInt(ClienteTable.getValueAt(linha, 0).toString());
-           CpfInput.setText(String.valueOf(cod));
-
-           NomeField.setText(ClienteTable.getValueAt(linha, 1).toString());
-           CEPLabel.setText(ClienteTable.getValueAt(linha, 2).toString());
-           EmailLabel.setText(ClienteTable.getValueAt(linha, 3).toString());
-           TelefoneInput.setText(ClienteTable.getValueAt(linha, 4).toString());
-
-       } else if (ClienteTable.getRowCount() == 0) {
-           JOptionPane.showMessageDialog(this, "Tabela vazia.");
-       } else {
-           JOptionPane.showMessageDialog(this, "Por favor, selecione apenas uma linha para a operação.");
-       }
-    }
     
     private void limparFormulario(){
         EmailLabel.setText("");

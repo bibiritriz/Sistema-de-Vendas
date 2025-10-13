@@ -10,6 +10,7 @@ public class Produto {
     private String descricao;
     private double precoVenda;
     private int qtdeEstoque;
+    private boolean status;
     
     public Produto(int codProd, 
                     String nome, 
@@ -70,4 +71,14 @@ public class Produto {
     public void setQtdeEstoque(int qtdeEstoque) {
         this.qtdeEstoque = qtdeEstoque;
     }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+    
 }

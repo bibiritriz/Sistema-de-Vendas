@@ -150,7 +150,7 @@ public class ProdutoDAO {
     }
 
     public void excluir(int codProduto) {
-        String sql = "DELETE FROM produtos WHERE codProduto = ?";
+        String sql = "UPDATE produtos SET status = 0 WHERE codProduto = ?";
         try (Connection conn = new Conexao().getConexao()) {
             conn.setAutoCommit(false);
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {

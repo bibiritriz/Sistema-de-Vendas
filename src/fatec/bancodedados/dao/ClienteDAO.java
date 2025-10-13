@@ -10,7 +10,7 @@ import java.util.List;
 import fatec.bancodedados.model.Cliente;
 
 public class ClienteDAO {
-    public void inserir(Cliente cl) {
+    public void inserir(Cliente cl) throws SQLException{
         String sql = "INSERT INTO clientes (cpfCliente, nome, codEndereco, email, telefone) VALUES (?,?,?,?,?)";
         try (Connection conn = new Conexao().getConexao()) {
             conn.setAutoCommit(false);
@@ -37,7 +37,7 @@ public class ClienteDAO {
             stmt.setString(1, cpf);
             try (ResultSet rs = stmt.executeQuery()) {
                 rs.first();
-                Cliente cl = new Cliente(rs.getString("nome"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"));
+                Cliente cl = new Cliente(rs.getString("nome"), rs.getInt("codEndereco"), rs.getString("email"), rs.getString("telefone"), rs.getString("cpfCliente"), rs.getBoolean("status"));
                 return cl;
             }
         } catch (SQLException ex) {
@@ -58,7 +58,8 @@ public class ClienteDAO {
                             rs.getInt("codEndereco"),
                             rs.getString("email"),
                             rs.getString("telefone"),
-                            rs.getString("cpfCliente")
+                            rs.getString("cpfCliente"),
+                            rs.getBoolean("status")
                     );
                     lista.add(cl);
                 }
@@ -90,8 +91,8 @@ public class ClienteDAO {
         }
     }
 
-    public void excluir(String cpf) {
-        String sql = "DELETE FROM clientes WHERE cpfCliente=?";
+    public void desativar(String cpf) {
+        String sql = "UPDATE clientes SET status = 0 WHERE cpfCliente=?";
 
         try (Connection conn = new Conexao().getConexao()) {
             conn.setAutoCommit(false);
@@ -100,11 +101,11 @@ public class ClienteDAO {
                 stmt.execute();
                 conn.commit();
             } catch (SQLException ex) {
-                System.out.println("Erro ao excluir cliente: " + ex.getMessage());
+                System.out.println("Erro ao desativar cliente: " + ex.getMessage());
                 conn.rollback();
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao conectar ao banco em excluir cliente: " + ex.getMessage());
+            System.out.println("Erro ao conectar ao banco em desativar cliente: " + ex.getMessage());
         }
     }
 
