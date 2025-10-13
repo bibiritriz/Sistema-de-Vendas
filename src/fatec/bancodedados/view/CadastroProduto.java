@@ -482,6 +482,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         List<Produto> listaDeProdutos = pDAO.getProdutos();
         
         for(Produto p: listaDeProdutos){
+            if(!p.isStatus()) continue;
             model.addRow(new Object[]{
                 p.getCodProd(), 
                 p.getNome(), 

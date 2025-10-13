@@ -71,4 +71,14 @@ public class Produto {
     public void setQtdeEstoque(int qtdeEstoque) {
         this.qtdeEstoque = qtdeEstoque;
     }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+    
 }
