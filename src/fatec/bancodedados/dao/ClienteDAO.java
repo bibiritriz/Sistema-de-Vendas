@@ -91,8 +91,8 @@ public class ClienteDAO {
         }
     }
 
-    public void excluir(String cpf) {
-        String sql = "DELETE FROM clientes WHERE cpfCliente=?";
+    public void desativar(String cpf) {
+        String sql = "UPDATE clientes SET status = 0 WHERE cpfCliente=?";
 
         try (Connection conn = new Conexao().getConexao()) {
             conn.setAutoCommit(false);
@@ -101,11 +101,11 @@ public class ClienteDAO {
                 stmt.execute();
                 conn.commit();
             } catch (SQLException ex) {
-                System.out.println("Erro ao excluir cliente: " + ex.getMessage());
+                System.out.println("Erro ao desativar cliente: " + ex.getMessage());
                 conn.rollback();
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao conectar ao banco em excluir cliente: " + ex.getMessage());
+            System.out.println("Erro ao conectar ao banco em desativar cliente: " + ex.getMessage());
         }
     }
 
