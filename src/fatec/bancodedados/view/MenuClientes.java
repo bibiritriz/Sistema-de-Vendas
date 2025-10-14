@@ -508,7 +508,17 @@ public class MenuClientes extends javax.swing.JFrame {
             clDAO.editar(cl);
             carregarClientes();
         }else{
-            //Criar
+            //Criar      
+            boolean existClient = new ClienteDAO().isClineteExist(cpf, email);;
+            if(existClient) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Erro!! Emailou cpf já cadastrado.",
+                    "Erro de Validação",
+                    JOptionPane.ERROR_MESSAGE 
+                );
+                return;
+            }
             String otp = otpService.generateOtp(email);
             emailService.sendOtpEmail(email, otp);
             
@@ -532,19 +542,8 @@ public class MenuClientes extends javax.swing.JFrame {
                 try {
                     clDAO.inserir(cl);
                 } catch (SQLException ex) {
-                    if (ex.getSQLState().equals("23000")) {
-                        JOptionPane.showMessageDialog(
-                            this,
-                            "Erro!! Emailou cpf já cadastrado.",
-                            "Erro de Validação",
-                            JOptionPane.ERROR_MESSAGE 
-                        );
-                        System.out.println(ex.getMessage());
-                        return;
-                    } else {
-                        ex.printStackTrace();
-                        return;
-                    }
+                    ex.printStackTrace();
+                    return;
                 }
             }else{
                 JOptionPane.showMessageDialog(

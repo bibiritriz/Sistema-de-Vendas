@@ -45,6 +45,23 @@ public class ClienteDAO {
             return null;
         }
     }
+    
+    public boolean isClineteExist(String cpf, String email){
+        String sql = "SELECT * FROM clientes WHERE cpfCliente = ? OR email = ? LIMIT 1";
+        
+        try (Connection conn = new Conexao().getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, cpf);
+            stmt.setString(2, email);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                 if(rs.next()) return true;
+                 return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public List<Cliente> getClientes() {
         List<Cliente> lista = new ArrayList<>();
