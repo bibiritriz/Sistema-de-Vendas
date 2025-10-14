@@ -32,6 +32,16 @@ public class Produto {
         
     }
 
+    public Produto(int codProd, String nome, String descricao, double precoVenda, int qtdeEstoque, boolean status) {
+        this.codProd = codProd;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.precoVenda = precoVenda;
+        this.qtdeEstoque = qtdeEstoque;
+        this.status = status;
+    }
+
+   
     public int getCodProd() {
         return codProd;
     }

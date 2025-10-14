@@ -61,8 +61,10 @@ public class ProdutoDAO {
                 rs.first();
                 Produto p = new Produto(rs.getInt("codProduto"),
                         rs.getString("nome"),
+                        rs.getString("descricao"),
                         rs.getDouble("precoVenda"),
-                        rs.getInt("qtdEstoque"));
+                        rs.getInt("qtdEstoque"),
+                        rs.getBoolean("status"));
                 return p;
             }
 
@@ -137,7 +139,7 @@ public class ProdutoDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nome"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"));
+                    Produto p = new Produto(rs.getInt("codProduto"), rs.getString("nome"), rs.getString("descricao"), rs.getDouble("precoVenda"), rs.getInt("qtdEstoque"), rs.getBoolean("status"));
                     p.setDescricao(rs.getString("descricao"));
                     lista.add(p);
                 }
