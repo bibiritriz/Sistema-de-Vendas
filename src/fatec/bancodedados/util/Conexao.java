@@ -49,11 +49,11 @@ Create database sistemavendas;
     status BINARY default 1 not null 
   );  
   
-     INSERT INTO Produtos (nome, descricao, precoVenda, qtdEstoque) VALUES
-    ('Notebook Gamer Alien', 'Notebook com placa de vídeo RTX 4080 e 32GB RAM', 12500.00, 15),
-    ('Mouse Sem Fio Logitech', 'Mouse ergonômico com 8 botões programáveis', 350.50, 80),
-    ('Teclado Mecânico Redragon', 'Teclado com switches blue e iluminação RGB', 499.90, 50),
-    ('Monitor Ultrawide LG 34"', 'Monitor com resolução 4K e 144Hz', 3200.00, 25);
+     INSERT INTO Produtos (nome, descricao, precoVenda, qtdEstoque, status) VALUES
+    ('Notebook Gamer Alien', 'Notebook com placa de vídeo RTX 4080 e 32GB RAM', 12500.00, 15, 1),
+    ('Mouse Sem Fio Logitech', 'Mouse ergonômico com 8 botões programáveis', 350.50, 80, 1),
+    ('Teclado Mecânico Redragon', 'Teclado com switches blue e iluminação RGB', 499.90, 50, 1),
+    ('Monitor Ultrawide LG 34"', 'Monitor com resolução 4K e 144Hz', 3200.00, 25, 1);
 
   CREATE TABLE NotasFiscais (  
     codNota INT PRIMARY KEY AUTO_INCREMENT,  
